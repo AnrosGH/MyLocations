@@ -205,13 +205,48 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     let newLocation = locations.last as CLLocation
     println("didUpdateLocations \(newLocation)")
     
-    //------------------------------------------
-    // If the location was previously unobtainable (i.e., an error occurred), but then a valid location is obtained, then the error code needs to be cleared.
-    lastLocationError = nil
+    //------------------------------------------------------------------------------------
+    // Detect Location Accuracy
         
-    // Store the CLLocation object obtained from the location manager.
-    location = newLocation
-    updateLabels()
+    // Getting location updates costs a lot of battery power as the device needs to keep its GPS/Wi-Fi/cell radios powered up for this. 
+    // This app doesn’t need to ask for GPS coordinates all the time, so it should stop when the location is accurate enough.
+        
+    if newLocation.timestamp.timeIntervalSinceNow < -5 {
+      // If the time at which the location object was determined is too long ago (5 seconds in this case), 
+      // then this is a "cached" result.  Instead of returning a new location fix, the location manager may initially provide the most
+      // recently found location under the assumption that the user might not have moved much since last time.
+      // Simply ignore these cached locations if they are too old.
+      return
+    }
+    //------------------------------------------
+    if newLocation.horizontalAccuracy < 0 {
+        // horizontalAccuracy is less than 0.  Therefore, the measurements are invalid and should be ignored.
+        return
+    }
+    //------------------------------------------
+    // Determine if the new location reading is more useful than the previous one.
+        
+    // Using a forced unwrap of "location" (via "!").  
+    // "location!.horizontalAccuracy > newLocation.horizontalAccuracy" is never preformed (i.e. "Short Circuited") if "location == nil" 
+    // because the first condition of the IF statement is true.
+        
+    if location == nil || location!.horizontalAccuracy > newLocation.horizontalAccuracy {
+      // "location" is nil, so this is the very first location update being received.  Continue.
+      // OR
+      // The range of accuracy (i.e. 100 m) of the previous reading (location!.horizontalAccuracy) is greater than 
+      // the range of accuracy (i.e. 10 m)  of the new reading (newLocation.horizontalAccuracy).
+      // In other words, the new reading is more accurate.
+      
+      lastLocationError = nil  // Clear any previous error messages.
+      location = newLocation   // Store the new location object.
+      updateLabels()
+      
+      if newLocation.horizontalAccuracy <= locationManager.desiredAccuracy {
+        // The range of accuracy of the new reading is equal to or better than the threshhold set in method, startLocationManager().
+        println("*** We're done!")
+        stopLocationManager()
+      }
+    }
   }
   //#####################################################################
 }
