@@ -55,6 +55,13 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
       return
     }
     //------------------------------------------
+    // Show an alert that encourages the user to enable location services.
+    if authStatus == .Denied || authStatus == .Restricted {
+      // The authorization status is denied or restricted.
+      showLocationServicesDeniedAlert()
+      return
+    }
+    //------------------------------------------
     // Set the location manager delegate property to this view controller.
     locationManager.delegate = self
     locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
@@ -64,6 +71,17 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     // Continuously receiving GPS coordinates requires a lot of power and will quickly drain the battery. 
     // The location manager will be turned on only when a location is needed and turned off again once a usable location has been received.
     locationManager.startUpdatingLocation()
+  }
+  //#####################################################################
+  // MARK: - Location Services
+  
+  func showLocationServicesDeniedAlert() {
+    // This pops up an alert that encourages the user to enable location services.
+    
+    let alert = UIAlertController(title: "Location Services Disabled", message: "Please enable location services for this app in Settings.", preferredStyle: .Alert)
+    let okAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+    presentViewController(alert, animated: true, completion: nil)
+    alert.addAction(okAction)
   }
   //#####################################################################
   // MARK: - Location Manager Delegate Protocol
