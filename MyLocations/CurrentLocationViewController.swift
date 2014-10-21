@@ -49,7 +49,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
   //#####################################################################
   // MARK: - Action Methods
   
-  @IBAction func getLocation() {
+  @IBAction func getLocation() {         // Responds to the "Get My Location" button.
 
     // Ask for permission to use the user's location.
     
@@ -71,7 +71,18 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
       return
     }
     //------------------------------------------
-    startLocationManager()
+    // 
+    if updatingLocation {
+      // The button was pressed while the app is doing location fetching, so stop the fetching.
+      stopLocationManager()
+      
+    } else {
+      // The button was pressed while the app is NOT doing location fetching, so start location fetching.
+      location = nil
+      lastLocationError = nil
+      startLocationManager()
+    }
+    //------------------------------------------
     updateLabels()
     configureGetButton()
   }
