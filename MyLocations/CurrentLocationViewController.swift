@@ -23,6 +23,10 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
   // Using let, not a variable (var). Its value will never have to change once a location manager object has been created.
   let locationManager = CLLocationManager()
   
+  // For storing the user's location.
+  // (Needs to be an optional because it is possible to NOT have a location.)
+  var location: CLLocation?
+  
   //#####################################################################
   // MARK: -
   // MARK: Initialization
@@ -84,6 +88,35 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     alert.addAction(okAction)
   }
   //#####################################################################
+  
+  func updateLabels() {
+    
+    // Using if/let to unwrap "location" because it is an optional.
+    // Note that it’s OK for the unwrapped variable to have the same name as the optional – here they are both called location.
+    if let location = location {
+      // Location exists.
+    
+      // Latitude and longitude are of type Double, so they need to be converted to strings.
+      // String interpolation (latitudeLabel.text = "\(location.coordinate.latitude)") is not being used.
+      // A format string is being used instead so that formatting can be applied.
+      // ".8" means there will be 8 digits after the decimal point.
+    
+      latitudeLabel.text = String(format: "%.8f", location.coordinate.latitude)
+      longitudeLabel.text = String(format: "%.8f", location.coordinate.longitude)
+      tagButton.hidden = false
+      messageLabel.text = ""
+    
+    } else {
+      // Location does not exist.
+    
+      latitudeLabel.text = ""
+      longitudeLabel.text = ""
+      addressLabel.text = ""
+      tagButton.hidden = true
+      messageLabel.text = "Tap 'Get My Location' to Start"
+    }
+  }
+  //#####################################################################
   // MARK: - Location Manager Delegate Protocol
   
   func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
@@ -92,8 +125,14 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
   //#####################################################################
 
   func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
+    
     let newLocation = locations.last as CLLocation
     println("didUpdateLocations \(newLocation)")
+    
+    //------------------------------------------
+    // Store the CLLocation object obtained from the location manager.
+    location = newLocation
+    updateLabels()
   }
   //#####################################################################
 }
