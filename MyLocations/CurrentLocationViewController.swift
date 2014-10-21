@@ -43,6 +43,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
   override func viewDidLoad() {
     super.viewDidLoad()
     updateLabels()
+    configureGetButton()
   }
 
   //#####################################################################
@@ -72,41 +73,32 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     //------------------------------------------
     startLocationManager()
     updateLabels()
+    configureGetButton()
   }
   //#####################################################################
-  // MARK: - Location Services
-  
-  func showLocationServicesDeniedAlert() {
-    // This pops up an alert that encourages the user to enable location services.
-    
-    let alert = UIAlertController(title: "Location Services Disabled", message: "Please enable location services for this app in Settings.", preferredStyle: .Alert)
-    let okAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
-    presentViewController(alert, animated: true, completion: nil)
-    alert.addAction(okAction)
-  }
-  //#####################################################################
-  
+  // MARK: - Buttons and Labels
+
   func updateLabels() {
     
     // Using if/let to unwrap "location" because it is an optional.
     // Note that it’s OK for the unwrapped variable to have the same name as the optional – here they are both called location.
     if let location = location {
       // Location exists.
-    
+      
       // Latitude and longitude are of type Double, so they need to be converted to strings.
       // String interpolation (latitudeLabel.text = "\(location.coordinate.latitude)") is not being used.
       // A format string is being used instead so that formatting can be applied.
       // ".8" means there will be 8 digits after the decimal point.
-    
+      
       latitudeLabel.text = String(format: "%.8f", location.coordinate.latitude)
       longitudeLabel.text = String(format: "%.8f", location.coordinate.longitude)
       tagButton.hidden = false
       messageLabel.text = ""
-    
-    //------------------------------------------------------------------------------------
+      
+      //------------------------------------------------------------------------------------
     } else {
       // Location does not exist.
-    
+      
       latitudeLabel.text = ""
       longitudeLabel.text = ""
       addressLabel.text = ""
@@ -121,23 +113,23 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
       if let error = lastLocationError {
         //if error.domain == kCLErrorDomain && error.code == CLError.Denied.rawValue {
         if error.domain == kCLErrorDomain && error.code == CLError.Denied.toRaw() {
-          // The user has not given the app permission to use location services.
-          statusMessage = "Location Services Disabled"
+        // The user has not given the app permission to use location services.
+        statusMessage = "Location Services Disabled"
         //--------------------
-        } else {
-          // Probably was not able to get a location fix.
-          statusMessage = "Error Getting Location"
+      } else {
+        // Probably was not able to get a location fix.
+        statusMessage = "Error Getting Location"
         }
-      //--------------------
+        //--------------------
       } else if !CLLocationManager.locationServicesEnabled() {
-        // Even if there was no error, it might still be impossible to get location coordinates if the user disabled Location Services 
+        // Even if there was no error, it might still be impossible to get location coordinates if the user disabled Location Services
         // completely on the device (instead of just for this app).
         statusMessage = "Location Services Disabled"
-      //--------------------
+        //--------------------
       } else if updatingLocation {
         // Everything is fine, but the first location object has not yet been received.
         statusMessage = "Searching..."
-      //--------------------
+        //--------------------
       } else {
         statusMessage = "Tap 'Get My Location' to Start"
       }
@@ -146,7 +138,29 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     }
   }
   //#####################################################################
-
+  
+  func configureGetButton() {
+          
+    if updatingLocation {
+      getButton.setTitle("Stop", forState: .Normal)
+          
+    } else {
+      getButton.setTitle("Get My Location", forState: .Normal)
+    }
+  }
+  //#####################################################################
+  // MARK: - Location Services
+  
+  func showLocationServicesDeniedAlert() {
+    // This pops up an alert that encourages the user to enable location services.
+    
+    let alert = UIAlertController(title: "Location Services Disabled", message: "Please enable location services for this app in Settings.", preferredStyle: .Alert)
+    let okAction = UIAlertAction(title: "OK", style: .Default, handler: nil)
+    presentViewController(alert, animated: true, completion: nil)
+    alert.addAction(okAction)
+  }
+  //#####################################################################
+  
   func startLocationManager() {
         
     if CLLocationManager.locationServicesEnabled() {
@@ -197,6 +211,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
         
     stopLocationManager()
     updateLabels()
+    configureGetButton()
   }
   //#####################################################################
 
@@ -245,6 +260,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
         // The range of accuracy of the new reading is equal to or better than the threshhold set in method, startLocationManager().
         println("*** We're done!")
         stopLocationManager()
+        configureGetButton()
       }
     }
   }
