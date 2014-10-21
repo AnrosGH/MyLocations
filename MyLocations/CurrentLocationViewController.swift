@@ -22,10 +22,14 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
   // The CLLocationManager is the object that will provide GPS coordinates. 
   // Using let, not a variable (var). Its value will never have to change once a location manager object has been created.
   let locationManager = CLLocationManager()
-  
+  //------------------------------------------
   // For storing the user's location.
   // (Needs to be an optional because it is possible to NOT have a location.)
   var location: CLLocation?
+  //------------------------------------------
+  // Location error handling
+  var updatingLocation = false
+  var lastLocationError: NSError?
   
   //#####################################################################
   // MARK: -
@@ -38,7 +42,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    // Do any additional setup after loading the view, typically from a nib.
+    updateLabels()
   }
 
   //#####################################################################
@@ -66,15 +70,8 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
       return
     }
     //------------------------------------------
-    // Set the location manager delegate property to this view controller.
-    locationManager.delegate = self
-    locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
-    
-    // The new CLLocationManager object doesn’t give out GPS coordinates right away. 
-    // To begin receiving coordinates requires a call to its startUpdatingLocation() method first.
-    // Continuously receiving GPS coordinates requires a lot of power and will quickly drain the battery. 
-    // The location manager will be turned on only when a location is needed and turned off again once a usable location has been received.
-    locationManager.startUpdatingLocation()
+    startLocationManager()
+    updateLabels()
   }
   //#####################################################################
   // MARK: - Location Services
@@ -106,6 +103,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
       tagButton.hidden = false
       messageLabel.text = ""
     
+    //------------------------------------------------------------------------------------
     } else {
       // Location does not exist.
     
@@ -114,13 +112,91 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
       addressLabel.text = ""
       tagButton.hidden = true
       messageLabel.text = "Tap 'Get My Location' to Start"
+      
+      //------------------------------------------
+      // Error handling
+      
+      var statusMessage: String
+      
+      if let error = lastLocationError {
+        //if error.domain == kCLErrorDomain && error.code == CLError.Denied.rawValue {
+        if error.domain == kCLErrorDomain && error.code == CLError.Denied.toRaw() {
+          // The user has not given the app permission to use location services.
+          statusMessage = "Location Services Disabled"
+        //--------------------
+        } else {
+          // Probably was not able to get a location fix.
+          statusMessage = "Error Getting Location"
+        }
+      //--------------------
+      } else if !CLLocationManager.locationServicesEnabled() {
+        // Even if there was no error, it might still be impossible to get location coordinates if the user disabled Location Services 
+        // completely on the device (instead of just for this app).
+        statusMessage = "Location Services Disabled"
+      //--------------------
+      } else if updatingLocation {
+        // Everything is fine, but the first location object has not yet been received.
+        statusMessage = "Searching..."
+      //--------------------
+      } else {
+        statusMessage = "Tap 'Get My Location' to Start"
+      }
+      
+      messageLabel.text = statusMessage
+    }
+  }
+  //#####################################################################
+
+  func startLocationManager() {
+        
+    if CLLocationManager.locationServicesEnabled() {
+      // Location services are enabled.
+        
+      // Set the location manager delegate property to this view controller.
+      locationManager.delegate = self
+      locationManager.desiredAccuracy = kCLLocationAccuracyNearestTenMeters
+        
+      // The new CLLocationManager object doesn’t give out GPS coordinates right away.
+      // To begin receiving coordinates requires a call to its startUpdatingLocation() method first.
+      // Continuously receiving GPS coordinates requires a lot of power and will quickly drain the battery.
+      // The location manager will be turned on only when a location is needed and turned off again once a usable location has been received.
+      locationManager.startUpdatingLocation()
+        
+      updatingLocation = true
+    }
+  }
+  //#####################################################################
+
+  func stopLocationManager() {
+    if updatingLocation {
+      locationManager.stopUpdatingLocation()
+      locationManager.delegate = nil
+      updatingLocation = false
     }
   }
   //#####################################################################
   // MARK: - Location Manager Delegate Protocol
   
   func locationManager(manager: CLLocationManager!, didFailWithError error: NSError!) {
+        
     println("didFailWithError \(error)")
+    
+    // The error codes used by Core Location have simple integer values. Rather than using the values 0, 1, 2 and so on in your program, 
+    // Core Location has given them symbolic names using the CLError enum.  "rawValue" converts a name back to its integer value.
+        
+    //if error.code == CLError.LocationUnknown.rawValue {
+    if error.code == CLError.LocationUnknown.toRaw() {
+      // The CLError.LocationUnknown error means the location manager was unable to obtain a location right now,
+      // but that doesn’t mean all is lost. It might just need another second or so to get an uplink to the GPS satellite.
+      // In the mean time it’s letting you know that for now it could not get any location information.
+      // Simply keep trying until a location is found or a more serious error is received.
+      return
+    }
+    // Store the error object.
+    lastLocationError = error
+        
+    stopLocationManager()
+    updateLabels()
   }
   //#####################################################################
 
@@ -130,6 +206,9 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     println("didUpdateLocations \(newLocation)")
     
     //------------------------------------------
+    // If the location was previously unobtainable (i.e., an error occurred), but then a valid location is obtained, then the error code needs to be cleared.
+    lastLocationError = nil
+        
     // Store the CLLocation object obtained from the location manager.
     location = newLocation
     updateLabels()
