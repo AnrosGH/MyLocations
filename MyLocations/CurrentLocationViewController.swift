@@ -30,6 +30,12 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
   // Location error handling
   var updatingLocation = false
   var lastLocationError: NSError?
+  //------------------------------------------
+  // Reverse Geocoding (lat & long to an address)
+  let geocoder = CLGeocoder()                // Object that will perform the geocoding.
+  var placemark: CLPlacemark?                // Object containing the address results.
+  var performingReverseGeocoding = false
+  var lastGeocodingError: NSError?
   
   //#####################################################################
   // MARK: -
@@ -272,6 +278,33 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
         println("*** We're done!")
         stopLocationManager()
         configureGetButton()
+      }
+      //------------------------------------------
+      // Reverse Geocoding
+      
+      // The app should only perform a single reverse geocoding request at a time.
+      
+      if !performingReverseGeocoding {
+        // The app is NOT performing a reverse geocoding request.
+      
+        println("*** Going to geocode")
+        performingReverseGeocoding = true
+      
+        // Tell the CLGeocoder object to reverse geocode the location and that the code following "completionHandler:" should be executed
+        // as soon as the geocoding is completed.
+      
+        geocoder.reverseGeocodeLocation(location, completionHandler: {placemarks, error in
+          // This is a CLOSURE.  Variables before the "in" keyword are input parameters ("placemarks" and "error").
+          // The code is executed after CLGeocoder finds an address or encounters an error.
+          // A Closure is used instead of a delegate so that the code 
+          // a) is executed asynchronously and
+          // b) resides right where it would have been called, which makes the code more compact and easier to read.
+      
+          // placemarks - will contain an array of CLPlacemark objects that describe the address information.
+          // error - contains an error message if something went wrong.
+        
+          println("*** Found placemarks: \(placemarks), error: \(error)")
+        })
       }
     }
   }
