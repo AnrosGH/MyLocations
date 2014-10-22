@@ -36,6 +36,9 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
   var placemark: CLPlacemark?                // Object containing the address results.
   var performingReverseGeocoding = false
   var lastGeocodingError: NSError?
+  //------------------------------------------
+  // Timeout
+  var timer: NSTimer?
   
   //#####################################################################
   // MARK: -
@@ -212,15 +215,51 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
       locationManager.startUpdatingLocation()
         
       updatingLocation = true
+      
+      //------------------------------------------
+      // Set up a timer object that sends the "didTimeOut" message to self after 60 seconds.
+      timer = NSTimer.scheduledTimerWithTimeInterval(60,
+                                              target: self,
+                                            selector: Selector("didTimeOut"),
+                                            userInfo: nil,
+                                             repeats: false)
     }
   }
   //#####################################################################
 
   func stopLocationManager() {
     if updatingLocation {
+      
+      if let timer = timer {
+        // Cancel the timer in case the location manager is stopped before the time-out fires.
+        // This happens when an accurate enough location is found within one minute after starting or when the user taps the Stop button.
+        timer.invalidate()
+      }
+      //------------------------------------------
       locationManager.stopUpdatingLocation()
       locationManager.delegate = nil
       updatingLocation = false
+    }
+  }
+  //#####################################################################
+
+  func didTimeOut() {
+    // Called after a time period set in method startLocationManager, whether or not a valid location has been obtained 
+    // (unless stopLocationManager cancels the timer first).
+    
+    println("*** Time out")
+    
+    if location == nil {
+      // Still no valid location.
+      
+      stopLocationManager()
+      
+      // Create a custom error code.
+      lastLocationError = NSError(domain: "MyLocationsErrorDomain", code: 1, userInfo: nil)
+      
+      // Update the screen.
+      updateLabels()
+      configureGetButton()
     }
   }
   //#####################################################################
