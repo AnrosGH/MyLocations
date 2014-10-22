@@ -86,6 +86,8 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
       // The button was pressed while the app is NOT doing location fetching, so start location fetching.
       location = nil
       lastLocationError = nil
+      placemark = nil
+      lastGeocodingError = nil
       startLocationManager()
     }
     //------------------------------------------
@@ -112,6 +114,22 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
       tagButton.hidden = false
       messageLabel.text = ""
       
+      //------------------------------------------
+      // Make the reverse geocoded address visible to the user.
+      // (Reverse geocoding an address only occurs once the app has an accurate location.)
+      
+      if let placemark = placemark {
+        addressLabel.text = stringFromPlacemark(placemark)
+        
+      } else if performingReverseGeocoding {
+        addressLabel.text = "Searching for Address..."
+        
+      } else if lastGeocodingError != nil {
+        addressLabel.text = "Error Finding Address"
+        
+      } else {
+        addressLabel.text = "No Address Found"
+      }
       //------------------------------------------------------------------------------------
     } else {
       // Location does not exist.
@@ -123,7 +141,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
       messageLabel.text = "Tap 'Get My Location' to Start"
       
       //------------------------------------------
-      // Error handling
+      // Error handling - show a status message.
       
       var statusMessage: String
       
@@ -204,6 +222,23 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
       locationManager.delegate = nil
       updatingLocation = false
     }
+  }
+  //#####################################################################
+  
+  func stringFromPlacemark(placemark: CLPlacemark) -> String {
+      // Format a CLPlacemark object into a string.
+      
+      // subThoroughfare    = house number
+      // thoroughfare       = street name
+      // locality           = city
+      // administrativeArea = state or province
+      // postalCode         = zip code or postal code
+      
+      // "\n" = line break
+      
+      return "\(placemark.subThoroughfare) \(placemark.thoroughfare)\n" +
+             "\(placemark.locality) \(placemark.administrativeArea) " +
+             "\(placemark.postalCode)"
   }
   //#####################################################################
   // MARK: - Location Manager Delegate Protocol
@@ -304,6 +339,32 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
           // error - contains an error message if something went wrong.
         
           println("*** Found placemarks: \(placemarks), error: \(error)")
+          //--------------------
+          // 
+      
+          // Store the error object for future reference.
+          // NOTE: "self" is required inside a Closure, but optional outside a Closure.
+          self.lastGeocodingError = error
+      
+          if error == nil && !placemarks.isEmpty {
+            // No errors AND objects exist in the placemarks array.
+        
+            // Usually there will be only one CLPlacemark object in the array, but it is possible for one location coordinate to refer to more than one address. 
+            // This app can only handle one address, so just pick the last object in the placemarks array (which usually is the only one).
+        
+            // The placemarks array contains objects of type AnyObject. This happens because CLGeocoder was written in Objective-C,
+            // which isn’t as expressive as Swift.  Because the placemark instance variable is of type CLPlacemark, 
+            // the object must be type cast using the “as” operator, indicating that objects from this array are always going to be CLPlacemark objects.
+            // Also, since "placemark" is an optional instance variable, it must be cast as an optional (indicated by "?").
+            self.placemark = placemarks.last as? CLPlacemark
+        
+          } else {
+            // An error occurred during geocoding.
+            // Clear the placemark because only the address corresponding to the current location is desired or no address at all - NOT an old address.
+            self.placemark = nil
+          }
+          self.performingReverseGeocoding = false
+          self.updateLabels()
         })
       }
     }
