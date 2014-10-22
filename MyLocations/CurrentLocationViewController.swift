@@ -146,8 +146,8 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
       var statusMessage: String
       
       if let error = lastLocationError {
-        //if error.domain == kCLErrorDomain && error.code == CLError.Denied.rawValue {
-        if error.domain == kCLErrorDomain && error.code == CLError.Denied.toRaw() {
+        if error.domain == kCLErrorDomain && error.code == CLError.Denied.rawValue {
+        //if error.domain == kCLErrorDomain && error.code == CLError.Denied.toRaw() {
         // The user has not given the app permission to use location services.
         statusMessage = "Location Services Disabled"
         //--------------------
@@ -250,8 +250,8 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     // The error codes used by Core Location have simple integer values. Rather than using the values 0, 1, 2 and so on in your program, 
     // Core Location has given them symbolic names using the CLError enum.  "rawValue" converts a name back to its integer value.
         
-    //if error.code == CLError.LocationUnknown.rawValue {
-    if error.code == CLError.LocationUnknown.toRaw() {
+    if error.code == CLError.LocationUnknown.rawValue {
+    //if error.code == CLError.LocationUnknown.toRaw() {
       // The CLError.LocationUnknown error means the location manager was unable to obtain a location right now,
       // but that doesn’t mean all is lost. It might just need another second or so to get an uplink to the GPS satellite.
       // In the mean time it’s letting you know that for now it could not get any location information.
@@ -291,6 +291,17 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
         return
     }
     //------------------------------------------
+    // Deal with the iPod touch which doesn't have a GPS but only relies on Wi-Fi to determine location which may result in not being able to reach 
+    // the location accuracy threshhold.
+    
+    // Set the distance between the new location and the previous one to a gigantic number in the event no previous location exists.
+    var distance = CLLocationDistance(DBL_MAX)
+
+    if let location = location {
+      // A previous location exists.  Calculate the distance between the new location and the previous one.
+      distance = newLocation.distanceFromLocation(location)
+    }
+    //------------------------------------------
     // Determine if the new location reading is more useful than the previous one.
         
     // Using a forced unwrap of "location" (via "!").  
@@ -313,6 +324,14 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
         println("*** We're done!")
         stopLocationManager()
         configureGetButton()
+        //--------------------
+        if distance > 0 {
+          // Force a reverse geocoding for the final location in the event that 
+          // the app is currently in the process of performing a reverse geocode on the second-to-last location.
+          performingReverseGeocoding = false
+      
+        // else if the distance between the new location and the previous one = 0, then the reverse geocode of the second-to-last location is sufficient.
+        }
       }
       //------------------------------------------
       // Reverse Geocoding
@@ -340,7 +359,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
         
           println("*** Found placemarks: \(placemarks), error: \(error)")
           //--------------------
-          // 
+          // Get the placemark object for displaying the address to the user.
       
           // Store the error object for future reference.
           // NOTE: "self" is required inside a Closure, but optional outside a Closure.
@@ -366,6 +385,24 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
           self.performingReverseGeocoding = false
           self.updateLabels()
         })
+      }
+    //------------------------------------------
+    } else if distance < 1.0 {
+      // location is NOT nil AND the distance between the new location and the previous one < 1.0 meter.
+      
+      // This logic guards against devices that have no GPS and only rely on Wi-Fi, which could result in accuracy readings
+      // that never reach the minimum accuracy setting.  For example, an iPod Touch experiment resulted in only a +/- 100 meters accuracy.
+      
+      // Calculate the time interval between receipt of the new location and the previous one.
+      let timeInterval = newLocation.timestamp.timeIntervalSinceDate(location!.timestamp)  // Note that "location" is guaranteed NOT to be nil.  Therefore, "!".
+        
+      if timeInterval > 10 {
+        // It has been more than 10 seconds between location updates that are essentially the same.  Assume this is the best coordinate attainable.
+          
+        println("*** Force done!")
+        stopLocationManager()
+        updateLabels()
+        configureGetButton()
       }
     }
   }
