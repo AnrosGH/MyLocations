@@ -41,8 +41,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
   var timer: NSTimer?
   
   //#####################################################################
-  // MARK: -
-  // MARK: Initialization
+  // MARK: - Initialization
   
   //#####################################################################
   // MARK: - UIViewController - Managing the View
@@ -54,7 +53,6 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     updateLabels()
     configureGetButton()
   }
-
   //#####################################################################
   // MARK: - Action Methods
   
@@ -308,6 +306,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
 
   func locationManager(manager: CLLocationManager!, didUpdateLocations locations: [AnyObject]!) {
     
+    // Since "locations" is cast as an array of type AnyObject, it is necessary to more specifically cast it here.
     let newLocation = locations.last as CLLocation
     println("didUpdateLocations \(newLocation)")
     
