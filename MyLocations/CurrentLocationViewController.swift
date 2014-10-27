@@ -44,6 +44,32 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
   // MARK: - Initialization
   
   //#####################################################################
+  // MARK: - Segues
+  
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    
+    if segue.identifier == "TagLocation" {
+      
+      // The segue does not go directly to LocationDetailViewController but to the navigation controller that embeds LocationDetailViewController.
+      // First, set up a constant to represent this UINavigationController object.
+      let navigationController = segue.destinationViewController as UINavigationController
+      
+      // To find the LocationDetailViewController, look at the navigation controller’s topViewController property.
+      // This property refers to the screen that is currently active inside the navigation controller.
+      let controller = navigationController.topViewController as LocationDetailsViewController
+      
+      //------------------------------------------
+      // Set the properties of LocationDetailViewController.
+      
+      // Because location is an optional, it needs to be unwrapped before its coordinate property can be accessed. 
+      // It’s safe to force unwrap (!) at this point because the Tag Location button that triggers the segue won’t be visible unless a location is found (i.e. not nil).
+      controller.coordinate = location!.coordinate
+      
+      // The placemark variable is also an optional, but so is the placemark property on LocationDetailsViewController.  Therefore, no unwrapping is necessary.
+      controller.placemark = placemark
+    }
+  }
+  //#####################################################################
   // MARK: - UIViewController - Managing the View
   
   // viewDidLoad() is called after prepareForSegue().
