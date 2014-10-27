@@ -51,6 +51,9 @@ class LocationDetailsViewController: UITableViewController {
   
   // This contains address information obtained through reverse geocoding.
   var placemark: CLPlacemark?
+  //------------------------------------------
+  // Description Text View
+  var descriptionText = ""
   
   //#####################################################################
   // MARK: - Initialization
@@ -63,7 +66,7 @@ class LocationDetailsViewController: UITableViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    descriptionTextView.text = ""
+    descriptionTextView.text = descriptionText
     categoryLabel.text = ""
 
     latitudeLabel.text  = String(format: "%.8f", coordinate.latitude)
@@ -81,6 +84,9 @@ class LocationDetailsViewController: UITableViewController {
   // MARK: - Action Methods
   
   @IBAction func done() {
+    // Test the descriptionText variable.
+    println("Description '\(descriptionText)'")
+      
     dismissViewControllerAnimated(true, completion: nil)
   }
   //#####################################################################
@@ -128,6 +134,9 @@ extension LocationDetailsViewController: UITableViewDelegate {
       // frame property - a CGRect that describes the position and size of a view.
       // CGRect         - a struct that describes a rectangle with an origin made up of a CGPoint value (X, Y), and a CGSize value for width and height.
             
+      // frame  = position of a rectangle with respect to it's superview.
+      // bounds = position of a rectangle with respect to the frame.
+            
       // Change the width of the label to be 115 points less than the width of the screen and set the height to be excessively high.
       // Because the frame property is being changed, the multi-line UILabel (the text for which was set in viewDidLoad()) 
       // will now word-wrap the text to fit the requested width.
@@ -155,3 +164,25 @@ extension LocationDetailsViewController: UITableViewDelegate {
   }
   //#####################################################################
 }
+//#####################################################################
+// MARK: -
+// MARK: Text View Delegate
+
+extension LocationDetailsViewController: UITextViewDelegate {
+        
+  func textView(textView: UITextView, shouldChangeTextInRange range: NSRange, replacementText text: String) -> Bool {
+              
+    // Update the contents of the descriptionText instance variable whenever the user types into the text view.
+    // In order to use the stringByReplacingCharactersInRange() method, the textView's text must first be converted to an NSString object. 
+    descriptionText = (textView.text as NSString).stringByReplacingCharactersInRange(range, withString: text)
+              
+    return true
+  }
+  //#####################################################################
+  
+  func textViewDidEndEditing(textView: UITextView) {
+    descriptionText = textView.text
+  }
+  //#####################################################################
+}
+
