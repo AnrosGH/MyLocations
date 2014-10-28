@@ -54,10 +54,42 @@ class LocationDetailsViewController: UITableViewController {
   //------------------------------------------
   // Description Text View
   var descriptionText = ""
+  //------------------------------------------
+  // Temporarily store the chosen category.
+  var categoryName = "No Category"
   
   //#####################################################################
   // MARK: - Initialization
   
+  //#####################################################################
+  // MARK: - Segues
+  
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    
+    if segue.identifier == "PickCategory" {
+      // The segue’s destinationViewController is the CategoryPickerViewController, not a UINavigationController.
+      
+      // "destinationViewController" must be cast from its generic type (AnyObject) to the specific type used in this app
+      // (CategoryPickerViewController) before any of its properties can be accessed.
+      let controller = segue.destinationViewController as CategoryPickerViewController
+      
+      controller.selectedCategoryName = categoryName
+    }
+  }
+  //#####################################################################
+  // MARK: - Unwind Segues
+  
+  // An unwind segue is an action method that takes a UIStoryboardSegue parameter.
+  
+  @IBAction func categoryPickerDidPickCategory(segue: UIStoryboardSegue) {
+    // A storyboard connection was made from the prototype cell in the CategoryPickerViewController to that view controller's Exit button
+    // to engage this unwind segue.
+    
+    // Get the selected Category from the view controller that sent the segue - CategoryPickerViewController.
+    let controller = segue.sourceViewController as CategoryPickerViewController
+    categoryName = controller.selectedCategoryName
+    categoryLabel.text = categoryName
+  }
   //#####################################################################
   // MARK: - UIViewController - Managing the View
   
@@ -67,7 +99,7 @@ class LocationDetailsViewController: UITableViewController {
     super.viewDidLoad()
     
     descriptionTextView.text = descriptionText
-    categoryLabel.text = ""
+    categoryLabel.text = categoryName
 
     latitudeLabel.text  = String(format: "%.8f", coordinate.latitude)
     longitudeLabel.text = String(format: "%.8f", coordinate.longitude)
