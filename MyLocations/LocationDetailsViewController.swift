@@ -195,6 +195,28 @@ extension LocationDetailsViewController: UITableViewDelegate {
     }
   }
   //#####################################################################
+  
+  override func tableView(tableView: UITableView, willSelectRowAtIndexPath indexPath: NSIndexPath) -> NSIndexPath? {
+    // Limit user taps to the first two sections of the table view.
+    
+    if indexPath.section == 0 || indexPath.section == 1 {
+      return indexPath
+    
+    } else {
+      return nil
+    }
+  }
+  //#####################################################################
+  
+  override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    // When the user taps anywhere inside the first cell, the text view should activate, even if the tap wasn’t on the text view itself.
+      
+    if indexPath.section == 0 && indexPath.row == 0 {
+      // The user tapped somewhere in the first row - the row with the description text.
+      descriptionTextView.becomeFirstResponder()
+    }
+  }
+  //#####################################################################
 }
 //#####################################################################
 // MARK: -
