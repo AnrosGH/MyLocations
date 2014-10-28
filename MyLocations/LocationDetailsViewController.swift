@@ -152,6 +152,17 @@ class LocationDetailsViewController: UITableViewController {
     descriptionTextView.resignFirstResponder()
   }
   //#####################################################################
+  // MARK: - View Layout
+  
+  override func viewWillLayoutSubviews() {
+    // Called by UIKit as part of the layout phase of the view controller when it first appears on the screen.
+        
+    super.viewWillLayoutSubviews()
+        
+    // Set the width of the text view to the width of the screen minus a 15-point margin on each side.
+    descriptionTextView.frame.size.width = view.frame.size.width - 30
+  }
+  //#####################################################################
   // MARK: - Action Methods
   
   @IBAction func done() {
