@@ -98,19 +98,58 @@ class LocationDetailsViewController: UITableViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    //------------------------------------------
     descriptionTextView.text = descriptionText
     categoryLabel.text = categoryName
 
+    //------------------------------------------
     latitudeLabel.text  = String(format: "%.8f", coordinate.latitude)
     longitudeLabel.text = String(format: "%.8f", coordinate.longitude)
     
+    //------------------------------------------
+    // Fill in the address.
     if let placemark = placemark {
       addressLabel.text = stringFromPlacemark(placemark)
     } else {
       addressLabel.text = "No Address Found"
     }
-    
+    //------------------------------------------
     dateLabel.text = formatDate(NSDate())
+    //------------------------------------------
+    // Dismiss the keyboard in response to a tap anywhere on the screen.
+    
+    // Send message, "hideKeyboard:" when a tap is recognized anywhere in the table view.
+    // The colon following the action name indicates that this method takes a single parameter, which in this case is a reference to the gesture recognizer.
+    let gestureRecognizer = UITapGestureRecognizer(target: self, action: Selector("hideKeyboard:"))
+    gestureRecognizer.cancelsTouchesInView = false
+    tableView.addGestureRecognizer(gestureRecognizer)
+  }
+  //#####################################################################
+  // MARK: - Gesture Recognition
+  
+  func hideKeyboard(gestureRecognizer: UIGestureRecognizer) {
+    // Called whenever the user taps somewhere in the table view.
+    
+    // Determine where the tap occurred.
+    // Method locationInView returns a CGPoint value - a struct containing x and y fields that define a position on the screen.
+    let point = gestureRecognizer.locationInView(tableView)
+    
+    // Determine which index path is currently displayed at the position of the tap.
+    let indexPath = tableView.indexPathForRowAtPoint(point)
+    
+    // It is possible that the user taps inside the table view but not on a cell, for example somewhere in between two sections or on the section header. 
+    // In that case indexPath will be nil, making indexPath an optional (of type NSIndexPath?). 
+    // An optional, such as indexPath, needs to be unwrapped either with "if let" or "!".
+    // Using Short Circuiting:
+    // If indexPath equals nil, then everything behind the first && is simply ignored (called Short Circuiting).
+    // When the app gets to look at indexPath!.section, the value of indexPath will never be nil so forced unwrapping of indexPath (using "!") is safe.
+    
+    if indexPath != nil && indexPath!.section == 0 && indexPath!.row == 0 {
+      // Do NOT hide the keyboard if the user tapped in the row with the description text view.
+      return
+    }
+    // Hide the keyboard if the user tapped anywhere other than the row with the description text view.
+    descriptionTextView.resignFirstResponder()
   }
   //#####################################################################
   // MARK: - Action Methods
