@@ -16,6 +16,7 @@
 		64C1B76319F5816C00E334F0 /* MyLocationsTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C1B76219F5816C00E334F0 /* MyLocationsTests.swift */; };
 		64CCD77B19FE84260079CD4E /* LocationDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CCD77A19FE84260079CD4E /* LocationDetailsViewController.swift */; };
 		64CCD77D19FFCCCD0079CD4E /* CategoryPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CCD77C19FFCCCC0079CD4E /* CategoryPickerViewController.swift */; };
+		64CCD77F1A0024760079CD4E /* HudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CCD77E1A0024760079CD4E /* HudView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -42,6 +43,7 @@
 		64C1B76219F5816C00E334F0 /* MyLocationsTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyLocationsTests.swift; sourceTree = "<group>"; };
 		64CCD77A19FE84260079CD4E /* LocationDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationDetailsViewController.swift; sourceTree = "<group>"; };
 		64CCD77C19FFCCCC0079CD4E /* CategoryPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryPickerViewController.swift; sourceTree = "<group>"; };
+		64CCD77E1A0024760079CD4E /* HudView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HudView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,6 +90,7 @@
 				64C1B74C19F5816B00E334F0 /* CurrentLocationViewController.swift */,
 				64CCD77A19FE84260079CD4E /* LocationDetailsViewController.swift */,
 				64CCD77C19FFCCCC0079CD4E /* CategoryPickerViewController.swift */,
+				64CCD77E1A0024760079CD4E /* HudView.swift */,
 				64C1B74E19F5816B00E334F0 /* SecondViewController.swift */,
 				64C1B75319F5816B00E334F0 /* Images.xcassets */,
 				64C1B75519F5816B00E334F0 /* LaunchScreen.xib */,
@@ -223,6 +226,7 @@
 			files = (
 				64CCD77B19FE84260079CD4E /* LocationDetailsViewController.swift in Sources */,
 				64C1B74F19F5816B00E334F0 /* SecondViewController.swift in Sources */,
+				64CCD77F1A0024760079CD4E /* HudView.swift in Sources */,
 				64C1B74B19F5816B00E334F0 /* AppDelegate.swift in Sources */,
 				64CCD77D19FFCCCD0079CD4E /* CategoryPickerViewController.swift in Sources */,
 				64C1B74D19F5816B00E334F0 /* CurrentLocationViewController.swift in Sources */,
