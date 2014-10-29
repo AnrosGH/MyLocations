@@ -9,6 +9,10 @@
 import UIKit
 import CoreLocation
 
+// Import the Grand Central Dispatch (GCD) framework for handling asynchronous tasks.
+// Used in waiting for the Head Up Display to finish animating.
+import Dispatch
+
 //#####################################################################
 // MARK: - Private Global Constants
 //         Only a single instance is ever created (to conserve execution time and battery power).
@@ -177,6 +181,17 @@ class LocationDetailsViewController: UITableViewController {
     //println("Description '\(descriptionText)'")
           
     //dismissViewControllerAnimated(true, completion: nil)
+    //------------------------------------------
+    // Wait for the Heads Up Display to finish animating prior to closing the screen after the user clicks the Done button.
+    
+    // Convert a delay in seconds to an internal time format (measured in nanoseconds) for use with dispatch_after.
+    let delayInSeconds = 0.6
+    let when = dispatch_time(DISPATCH_TIME_NOW, Int64(delayInSeconds * Double(NSEC_PER_SEC)))
+    
+    // Use the delay to schedule running the code inside the closure.
+    dispatch_after(when, dispatch_get_main_queue(), {
+      self.dismissViewControllerAnimated(true, completion: nil)
+    })
   }
   //#####################################################################
   @IBAction func cancel() {
