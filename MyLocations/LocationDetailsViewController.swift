@@ -9,10 +9,6 @@
 import UIKit
 import CoreLocation
 
-// Import the Grand Central Dispatch (GCD) framework for handling asynchronous tasks.
-// Used in waiting for the Head Up Display to finish animating.
-import Dispatch
-
 //#####################################################################
 // MARK: - Private Global Constants
 //         Only a single instance is ever created (to conserve execution time and battery power).
@@ -180,18 +176,23 @@ class LocationDetailsViewController: UITableViewController {
     // Test the descriptionText variable.
     //println("Description '\(descriptionText)'")
           
-    //dismissViewControllerAnimated(true, completion: nil)
     //------------------------------------------
-    // Wait for the Heads Up Display to finish animating prior to closing the screen after the user clicks the Done button.
-    
-    // Convert a delay in seconds to an internal time format (measured in nanoseconds) for use with dispatch_after.
+    //dismissViewControllerAnimated(true, completion: nil)
+
+    // Wait a short period of time to give the Heads Up Display time to finish animating prior to closing the screen after the user clicks the Done button.
     let delayInSeconds = 0.6
-    let when = dispatch_time(DISPATCH_TIME_NOW, Int64(delayInSeconds * Double(NSEC_PER_SEC)))
-    
-    // Use the delay to schedule running the code inside the closure.
-    dispatch_after(when, dispatch_get_main_queue(), {
+/*
+    // Because afterDelay() is a free function, not a method, it is not necessary to specify the "closure:" label for the second parameter.
+    afterDelay(delayInSeconds, {
+      // Reminder that "self" needs to be used inside a Closure.
       self.dismissViewControllerAnimated(true, completion: nil)
     })
+*/
+    // Rewrite in a better format...
+    // Trailing Closure Syntax - a closure can be put behind a function call if the closure is the last parameter of the function.
+    afterDelay(delayInSeconds) {
+      self.dismissViewControllerAnimated(true, completion: nil)
+    }
   }
   //#####################################################################
   @IBAction func cancel() {

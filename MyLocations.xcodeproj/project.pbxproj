@@ -17,6 +17,7 @@
 		64CCD77B19FE84260079CD4E /* LocationDetailsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CCD77A19FE84260079CD4E /* LocationDetailsViewController.swift */; };
 		64CCD77D19FFCCCD0079CD4E /* CategoryPickerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CCD77C19FFCCCC0079CD4E /* CategoryPickerViewController.swift */; };
 		64CCD77F1A0024760079CD4E /* HudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CCD77E1A0024760079CD4E /* HudView.swift */; };
+		64CCD7811A0141870079CD4E /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CCD7801A0141870079CD4E /* Functions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		64CCD77A19FE84260079CD4E /* LocationDetailsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationDetailsViewController.swift; sourceTree = "<group>"; };
 		64CCD77C19FFCCCC0079CD4E /* CategoryPickerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CategoryPickerViewController.swift; sourceTree = "<group>"; };
 		64CCD77E1A0024760079CD4E /* HudView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HudView.swift; sourceTree = "<group>"; };
+		64CCD7801A0141870079CD4E /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 			isa = PBXGroup;
 			children = (
 				64C1B74A19F5816B00E334F0 /* AppDelegate.swift */,
+				64CCD7801A0141870079CD4E /* Functions.swift */,
 				64C1B75019F5816B00E334F0 /* Main.storyboard */,
 				64C1B74C19F5816B00E334F0 /* CurrentLocationViewController.swift */,
 				64CCD77A19FE84260079CD4E /* LocationDetailsViewController.swift */,
@@ -227,6 +230,7 @@
 				64CCD77B19FE84260079CD4E /* LocationDetailsViewController.swift in Sources */,
 				64C1B74F19F5816B00E334F0 /* SecondViewController.swift in Sources */,
 				64CCD77F1A0024760079CD4E /* HudView.swift in Sources */,
+				64CCD7811A0141870079CD4E /* Functions.swift in Sources */,
 				64C1B74B19F5816B00E334F0 /* AppDelegate.swift in Sources */,
 				64CCD77D19FFCCCD0079CD4E /* CategoryPickerViewController.swift in Sources */,
 				64C1B74D19F5816B00E334F0 /* CurrentLocationViewController.swift in Sources */,
