@@ -36,6 +36,9 @@ class HudView: UIView {  // Heads Up Display (HUD)
     // TESTING ONLY: Set the HUD view's background color to 50% transparent red to demonstrate that the HUD covers the entire screen.
     //hudView.backgroundColor = UIColor(red: 1, green: 0, blue: 0, alpha: 0.5)
     
+    // Animate the introduction to the screen of the HudView.
+    hudView.showAnimated(animated)
+    
     return hudView
   }
   //#####################################################################
@@ -106,6 +109,37 @@ class HudView: UIView {  // Heads Up Display (HUD)
       
     // Draw the text.
     text.drawAtPoint(textPoint, withAttributes: attribs)
+  }
+  //#####################################################################
+  // MARK: - Animations
+  
+  func showAnimated(animated: Bool) {
+      
+    if animated {
+      // Set up the initial state of the view before the animation starts.
+        
+      // Make the HUD view fully transparent.
+      alpha = 0
+        
+      // Make the HUD view initially stretched out.
+      transform = CGAffineTransformMakeScale(1.3, 1.3)
+        
+      //------------------------------------------
+      // Set up the animation.
+        
+      // Give animateWithDuration() a Closure that describes the animation.
+      UIView.animateWithDuration(0.3, animations: {
+        // UIKit will animate the properties changed inside this Closure.
+        // Set up the final state of the view for after the animation completes.
+        // Because this is a Closure, "self" must be used to refer to the HudView instance and its properties.
+      
+        // Make the HUD view fully opaque.
+        self.alpha = 1
+      
+        // Restore the scale of the HUD view back to normal.
+        self.transform = CGAffineTransformIdentity
+      })
+    }
   }
   //#####################################################################
 }
