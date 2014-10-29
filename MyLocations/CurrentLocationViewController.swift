@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreLocation
+import CoreData
 
 class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate {
 
@@ -39,6 +40,15 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
   //------------------------------------------
   // Timeout
   var timer: NSTimer?
+  //------------------------------------------
+  // Permanent Data Storage
+  
+  // If managedObjectContext were to be declared without "!", then Swift would demand it be given a value inside an init method.
+  // For objects loaded from a storyboard, such as view controllers, the init method is init(coder).
+  // Since prepareForSegue() happens after the new view controller is instantiated, and AFTER the call to init(coder). 
+  // As a result, inside init(coder) the value for managedObjectContext is indeterminate.
+  // Therefore, the managedObjectContext variable must be left nil for a short while until the segue happens, which means it must be an optional.
+  var managedObjectContext: NSManagedObjectContext!
   
   //#####################################################################
   // MARK: - Initialization
@@ -67,6 +77,11 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
       
       // The placemark variable is also an optional, but so is the placemark property on LocationDetailsViewController.  Therefore, no unwrapping is necessary.
       controller.placemark = placemark
+      
+      // Dependency Injection
+      // Passing on the Managed Object Context onto the LocationDetailsViewController so that not all Classes are directly
+      // dependent on the AppDelegate.
+      controller.managedObjectContext = managedObjectContext
     }
   }
   //#####################################################################

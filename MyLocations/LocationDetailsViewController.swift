@@ -8,6 +8,7 @@
 
 import UIKit
 import CoreLocation
+import CoreData
 
 //#####################################################################
 // MARK: - Private Global Constants
@@ -57,6 +58,9 @@ class LocationDetailsViewController: UITableViewController {
   //------------------------------------------
   // Temporarily store the chosen category.
   var categoryName = "No Category"
+  //------------------------------------------
+  // Permanent Data Storage
+  var managedObjectContext: NSManagedObjectContext!
   
   //#####################################################################
   // MARK: - Initialization
