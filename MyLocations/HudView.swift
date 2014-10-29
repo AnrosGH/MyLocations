@@ -123,22 +123,31 @@ class HudView: UIView {  // Heads Up Display (HUD)
         
       // Make the HUD view initially stretched out.
       transform = CGAffineTransformMakeScale(1.3, 1.3)
-        
+/*
       //------------------------------------------
-      // Set up the animation.
+      // Set up the animation for a simple fade-in.
+
+      UIView.animateWithDuration(0.3, animations: {
+        self.alpha = 1
+        self.transform = CGAffineTransformIdentity
+      })
+*/
+      //------------------------------------------
+      // Set up a spring animation.
         
       // Give animateWithDuration() a Closure that describes the animation.
-      UIView.animateWithDuration(0.3, animations: {
+      UIView.animateWithDuration(0.3, delay: 0, usingSpringWithDamping: 0.7, initialSpringVelocity: 0.5, options: UIViewAnimationOptions(0), animations: {
         // UIKit will animate the properties changed inside this Closure.
         // Set up the final state of the view for after the animation completes.
         // Because this is a Closure, "self" must be used to refer to the HudView instance and its properties.
-      
+        
         // Make the HUD view fully opaque.
         self.alpha = 1
-      
+        
         // Restore the scale of the HUD view back to normal.
         self.transform = CGAffineTransformIdentity
-      })
+      },
+      completion: nil)
     }
   }
   //#####################################################################
