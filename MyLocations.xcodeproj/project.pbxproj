@@ -20,6 +20,7 @@
 		64CCD7811A0141870079CD4E /* Functions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CCD7801A0141870079CD4E /* Functions.swift */; };
 		64CCD7841A016E8A0079CD4E /* DataModel.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 64CCD7821A016E8A0079CD4E /* DataModel.xcdatamodeld */; };
 		64CCD7861A0171A40079CD4E /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CCD7851A0171A40079CD4E /* Location.swift */; };
+		64CCD78A1A02D3660079CD4E /* LocationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CCD7891A02D3660079CD4E /* LocationsViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -50,6 +51,7 @@
 		64CCD7801A0141870079CD4E /* Functions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Functions.swift; sourceTree = "<group>"; };
 		64CCD7831A016E8A0079CD4E /* DataModel.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = DataModel.xcdatamodel; sourceTree = "<group>"; };
 		64CCD7851A0171A40079CD4E /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
+		64CCD7891A02D3660079CD4E /* LocationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationsViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -97,6 +99,7 @@
 				64CCD7851A0171A40079CD4E /* Location.swift */,
 				64C1B75019F5816B00E334F0 /* Main.storyboard */,
 				64C1B74C19F5816B00E334F0 /* CurrentLocationViewController.swift */,
+				64CCD7891A02D3660079CD4E /* LocationsViewController.swift */,
 				64CCD77A19FE84260079CD4E /* LocationDetailsViewController.swift */,
 				64CCD77C19FFCCCC0079CD4E /* CategoryPickerViewController.swift */,
 				64CCD77E1A0024760079CD4E /* HudView.swift */,
@@ -234,6 +237,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				64CCD77B19FE84260079CD4E /* LocationDetailsViewController.swift in Sources */,
+				64CCD78A1A02D3660079CD4E /* LocationsViewController.swift in Sources */,
 				64CCD7841A016E8A0079CD4E /* DataModel.xcdatamodeld in Sources */,
 				64C1B74F19F5816B00E334F0 /* SecondViewController.swift in Sources */,
 				64CCD77F1A0024760079CD4E /* HudView.swift in Sources */,

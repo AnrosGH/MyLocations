@@ -49,6 +49,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       
       // This triggers the creation of the managed object context.
       currentLocationViewController.managedObjectContext = managedObjectContext
+      
+      //--------------------
+      // Look up the LocationsViewController in the storyboard and give it a reference to the managed object context.
+      let navigationController = tabBarViewControllers[1] as UINavigationController
+      let locationsViewController = navigationController.viewControllers[0] as LocationsViewController
+      locationsViewController.managedObjectContext = managedObjectContext
     }
     //------------------------------------------
     // Error handling for a possible Core Data fatal error.
