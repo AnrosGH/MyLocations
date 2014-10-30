@@ -78,12 +78,15 @@ extension LocationsViewController: UITableViewDataSource {
     // Type Cast Note:
     //   dequeueReusableCellWithIdentifier() can return nil if there is no cell object to reuse.
     //   When using prototpye cells, however, dequeueReusableCellWithIdentifier() will never return nil so
-    //   so a non-optional constant can be type cast using "as UITableViewCell" (as opposed to "as? UITableViewCell" for an optional).
-    let cell = tableView.dequeueReusableCellWithIdentifier("LocationCell") as UITableViewCell
+    //   so a non-optional constant can be type cast using "as LocationCell" (as opposed to "as? LocationCell" for an optional).
+    let cell = tableView.dequeueReusableCellWithIdentifier("LocationCell") as LocationCell
     
     let location = locations[indexPath.row]
     
     //------------------------------------------
+/*
+    // REMOVED: Using tagged cells was replaced with a custom table view cell subclass, LocationCell.
+    
     let descriptionLabel = cell.viewWithTag(100) as UILabel
     descriptionLabel.text = location.locationDescription
     
@@ -94,6 +97,9 @@ extension LocationsViewController: UITableViewDataSource {
     } else {
       addressLabel.text = ""
     }
+*/
+    // Put the Location object into the table view cell.
+    cell.configureForLocation(location)
     //------------------------------------------
     return cell
   }

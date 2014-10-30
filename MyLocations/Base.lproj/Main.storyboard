@@ -366,7 +366,7 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <prototypes>
-                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="LocationCell" rowHeight="57" id="RIC-Pd-qcC">
+                            <tableViewCell contentMode="scaleToFill" selectionStyle="default" indentationWidth="10" reuseIdentifier="LocationCell" rowHeight="57" id="RIC-Pd-qcC" customClass="LocationCell" customModule="MyLocations" customModuleProvider="target">
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="RIC-Pd-qcC" id="6BH-RB-KSw">
                                     <autoresizingMask key="autoresizingMask"/>
@@ -387,6 +387,10 @@
                                         </label>
                                     </subviews>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <outlet property="addressLabel" destination="1Gm-vG-5mi" id="ooD-iF-nFu"/>
+                                    <outlet property="descriptionLabel" destination="tcU-oK-PKZ" id="0VX-id-GPe"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                         <connections>
