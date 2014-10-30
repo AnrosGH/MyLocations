@@ -62,6 +62,8 @@ class LocationDetailsViewController: UITableViewController {
   // Permanent Data Storage
   var managedObjectContext: NSManagedObjectContext!
   
+  var date = NSDate()
+  
   //#####################################################################
   // MARK: - Initialization
   
@@ -118,7 +120,7 @@ class LocationDetailsViewController: UITableViewController {
       addressLabel.text = "No Address Found"
     }
     //------------------------------------------
-    dateLabel.text = formatDate(NSDate())
+    dateLabel.text = formatDate(date)
     //------------------------------------------
     // Dismiss the keyboard in response to a tap anywhere on the screen.
     
@@ -179,7 +181,36 @@ class LocationDetailsViewController: UITableViewController {
           
     // Test the descriptionText variable.
     //println("Description '\(descriptionText)'")
+    //------------------------------------------
+    // Save the Location details.
           
+    // Create a new Core Data managed object called "location" by asking the NSEntityDescription class 
+    // to insert a new object for entity Location into the managed object context.
+    let location = NSEntityDescription.insertNewObjectForEntityForName("Location", inManagedObjectContext: managedObjectContext) as Location
+    
+    // Set the properties of the Location object.
+    location.locationDescription = descriptionText
+    location.category = categoryName
+    location.latitude = coordinate.latitude
+    location.longitude = coordinate.longitude
+    location.date = date
+    location.placemark = placemark
+          
+    // NSError and &
+    // In NSManagedObjectContext method "save", "error" is an "output parameter" or "pass-by-reference" denoted by the "&".
+    // The save() method returns a Bool to indicate whether the operation was successful or not. 
+    // If not, then it also fills up the NSError object with additional error information.
+    // Because error can be nil – meaning no error occurred – it needs to be declared as an optional.
+    var error: NSError?
+          
+    // Save the managed object context to the database.
+    if !managedObjectContext.save(&error) {
+      //println("Error: \(error)")
+      //abort()
+      
+      fatalCoreDataError(error)
+      return
+    }
     //------------------------------------------
     //dismissViewControllerAnimated(true, completion: nil)
 

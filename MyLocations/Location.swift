@@ -12,7 +12,7 @@ import CoreData
 // Required for placemark.
 import CoreLocation
 
-class Locations: NSManagedObject {
+class Location: NSManagedObject {
 
     @NSManaged var latitude: Double
     @NSManaged var longitude: Double

@@ -9,6 +9,23 @@
 import UIKit
 import CoreData
 
+//#####################################################################
+// Free Functions that can be used anywhere in the code.
+
+let MyManagedObjectContextSaveDidFailNotification = "MyManagedObjectContextSaveDidFailNotification"
+
+func fatalCoreDataError(error: NSError?) {
+  // It is unlikely, but possible, that this function is called without a proper NSError object, which is why the error parameter has type "NSError?".
+  
+  if let error = error {
+    // "error" is not nil, so output the Core Data error message to the Debug Area.
+    println("*** Fatal error: \(error), \(error.userInfo)")
+  }
+  // Create a custom notification.
+  NSNotificationCenter.defaultCenter().postNotificationName(MyManagedObjectContextSaveDidFailNotification, object: error)
+}
+//#####################################################################
+
 @UIApplicationMain
 
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -33,6 +50,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       // This triggers the creation of the managed object context.
       currentLocationViewController.managedObjectContext = managedObjectContext
     }
+    //------------------------------------------
+    // Error handling for a possible Core Data fatal error.
+    listenForFatalCoreDataNotifications()
+    
     //------------------------------------------
     return true
   }
@@ -101,6 +122,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
           // Create and return the NSManagedObjectContext.
           let context = NSManagedObjectContext()
           context.persistentStoreCoordinator = coordinator
+          
+          // Print the location of the SQLite database.
+          println(storeURL)
+          
           return context
         
         } else {
@@ -114,6 +139,54 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Something went wrong.  Abort the app.
     abort()
   }()
+  //#####################################################################
+  // MARK: - Core Data Fatal Error Handling
+    
+  func listenForFatalCoreDataNotifications() {
+            
+    // Register with the NSNotificationCenter for custom notification, MyManagedObjectContextSaveDidFailNotification.
+    NSNotificationCenter.defaultCenter().addObserverForName(MyManagedObjectContextSaveDidFailNotification,
+                                                            object: nil, queue: NSOperationQueue.mainQueue(), usingBlock: { notification in
+            
+      // The code here in Closure "usingBlock", gets executed when the NSNotificationCenter adds an observer for notification, MyManagedObjectContextSaveDidFailNotification.
+      // Closure usingBlock has one input parameter, notification, an NSNotification object.
+      // Since input parameter, notification, is not used in the Closure, a wildcard could also be used:
+      //     "{ _ in" instead of "{ notification in"
+      // to indicate to Swift that the parameter is being ignored.
+            
+      // Create a UIAlertController to contain the error message.
+      let alert = UIAlertController(title: "Internal Error",
+                                  message: "There was a fatal error in the app and it cannot continue.\n\n" + "Press OK to terminate the app. Sorry for the inconvenience.",
+                           preferredStyle: .Alert)
+            
+      // Create and return (initialize) an alert action with a specified title and behavior for the alert's OK button.
+      // (The use of the wildcard "_" indicates that the input parameter, UIAlertAction, is being ignored.  Refer to documentation for UIAlertAction.)
+      let action = UIAlertAction(title: "OK", style: .Default) { _ in
+        
+        // Create an NSException object to provide information to the crash log.
+        let exception = NSException(name: NSInternalInconsistencyException, reason: "Fatal Core Data error", userInfo: nil)
+        exception.raise()
+      }
+      // Add the action object to the UIAlertController object.
+      alert.addAction(action)
+            
+      // Present the alert to the view controller that is currently visible.
+      self.viewControllerForShowingAlert().presentViewController(alert, animated: true, completion: nil)
+    })
+  }
+  //#####################################################################
+  // 5
+  func viewControllerForShowingAlert() -> UIViewController {
+    // Find the view controller that is currently visible.
+              
+    let rootViewController = self.window!.rootViewController!
+              
+    if let presentedViewController = rootViewController.presentedViewController {
+      return presentedViewController
+    } else {
+      return rootViewController
+    }
+  }
   //#####################################################################
 }
 

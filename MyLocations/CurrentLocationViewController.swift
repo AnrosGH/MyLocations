@@ -455,6 +455,8 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
             // the object must be type cast using the “as” operator, indicating that objects from this array are always going to be CLPlacemark objects.
             // Also, since "placemark" is an optional instance variable, it must be cast as an optional (indicated by "?").
             self.placemark = placemarks.last as? CLPlacemark
+            
+            // To test Core Data fatal error handling, comment out the line above.
         
           } else {
             // An error occurred during geocoding.
