@@ -207,10 +207,28 @@ class LocationDetailsViewController: UITableViewController {
     //println("Description '\(descriptionText)'")
     //------------------------------------------
     // Save the Location details.
-          
-    // Create a new Core Data managed object called "location" by asking the NSEntityDescription class 
-    // to insert a new object for entity Location into the managed object context.
-    let location = NSEntityDescription.insertNewObjectForEntityForName("Location", inManagedObjectContext: managedObjectContext) as Location
+    
+    var location: Location
+    
+    if let temp = locationToEdit {
+      // EDIT Mode
+      
+      // Set the text property on the new object to reflect that fact that a changes to the previously tagged location have been saved.
+      hudView.text = "Updated"
+      
+      // Assign the unwrapped value of locationToEdit to variable location.
+      location = temp
+      
+    } else {
+      // ADD Mode
+      
+      // Set the text property on the new object to reflect that fact that a new location has been saved.
+      hudView.text = "Tagged"
+      
+      // Create a new Core Data managed object called "location" by asking the NSEntityDescription class
+      // to insert a new object for entity Location into the managed object context.
+      location = NSEntityDescription.insertNewObjectForEntityForName("Location", inManagedObjectContext: managedObjectContext) as Location
+    }
     
     // Set the properties of the Location object.
     location.locationDescription = descriptionText
