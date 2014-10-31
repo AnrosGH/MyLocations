@@ -55,6 +55,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       let navigationController = tabBarViewControllers[1] as UINavigationController
       let locationsViewController = navigationController.viewControllers[0] as LocationsViewController
       locationsViewController.managedObjectContext = managedObjectContext
+      //--------------------
+      // FIX FOR iOS 7 & 8 BUG.
+      // THIS FIX DID NOT WORK!
+      // Force the LocationsViewController to load its view immediately when the app starts up. 
+      // Without this, it delays loading the view until the user switches tabs, causing Core Data to get confused.
+      //let forceTheViewToLoad = locationsViewController.view
     }
     //------------------------------------------
     // Error handling for a possible Core Data fatal error.

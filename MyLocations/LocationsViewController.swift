@@ -135,6 +135,10 @@ class LocationsViewController: UITableViewController {
     // Assign the contents of the foundObjects array to the locations instance variable, casting it from an array of AnyObjects to Locations.
     locations = foundObjects as [Location]
 */
+    //--------------------
+    // FIX FOR iOS 7 & 8 BUG.
+    // Clear out the cache of the NSFetchedResultsController.
+    NSFetchedResultsController.deleteCacheWithName("Locations")
     //------------------------------------------
     // Perform an initial fetch from the database of Location objects.
     performFetch()
