@@ -208,6 +208,7 @@ class LocationDetailsViewController: UITableViewController {
     //------------------------------------------
     // Save the Location details.
     
+    // Although this non-optional, local variable is not given a value here, it IS given a value in the IF statement that follows - which Swift allows.
     var location: Location
     
     if let temp = locationToEdit {
