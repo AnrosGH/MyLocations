@@ -63,6 +63,23 @@ class LocationDetailsViewController: UITableViewController {
   var managedObjectContext: NSManagedObjectContext!
   
   var date = NSDate()
+  //------------------------------------------
+  // Determines whether the screen operates in “ADD” mode or in “EDIT” mode.
+  // (Needs to be an optional because in “ADD” mode it will be nil.)
+  
+  // Set up a "Property Observer" using a "didSet block".
+  // The code in the didSet block is performed whenever the variable is assigned a new value.
+  var locationToEdit: Location? {
+    didSet {
+      if let location = locationToEdit {
+        descriptionText = location.locationDescription
+        categoryName = location.category
+        date = location.date
+        coordinate = CLLocationCoordinate2DMake(location.latitude, location.longitude)
+        placemark = location.placemark
+      }
+    }
+  }
   
   //#####################################################################
   // MARK: - Initialization
@@ -104,6 +121,13 @@ class LocationDetailsViewController: UITableViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    //------------------------------------------
+    // Set view Title
+    
+    if let location = locationToEdit {
+      // locationToEdit is NOT nil, therefore, an existing Location object is being edited.
+      title = "Edit Location"
+    }
     //------------------------------------------
     descriptionTextView.text = descriptionText
     categoryLabel.text = categoryName

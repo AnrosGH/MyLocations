@@ -25,6 +25,44 @@ class LocationsViewController: UITableViewController {
   var locations = [Location]()
   
   //#####################################################################
+  // MARK: - Segues
+  
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject!) {
+    // This method is invoked when the user taps a row in the Locations screen.
+    // Allows data to be passed to the new view controller before the new view is displayed.
+    
+    if segue.identifier == "EditLocation" {
+      // Tell ListDetailViewController that the AllListsViewController is now its delegate.
+      
+      // The segue does not go directly to LocationDetailsViewController but to the navigation controller that embeds it.
+      // First, set up a constant to represent this UINavigationController object.
+      let navigationController = segue.destinationViewController as UINavigationController
+      
+      // To find the LocationDetailsViewController, look at the navigation controller’s topViewController property.
+      // This property refers to the screen that is currently active inside the navigation controller.
+      let controller = navigationController.topViewController as LocationDetailsViewController
+      
+      // Pass a reference to the ManagedObjectContext object to the LocationDetailsViewController.
+      controller.managedObjectContext = managedObjectContext
+      
+      //------------------------------------------
+      // EDIT Mode Setup
+      
+      // The sender parameter from prepareForSegue(sender) is of type AnyObject, but indexPathForCell() expects a UITableViewCell object instead.
+      // Therefore, sender must be more specifically cast to type UITableViewCell.
+      
+      if let indexPath = tableView.indexPathForCell(sender as UITableViewCell) {
+        let location = locations[indexPath.row]
+        controller.locationToEdit = location
+        
+        // Setting LocationDetailsViewController's property, locationToEdit, triggers the didSet code block of its Property Observer for locationToEdit
+        // to be executed, which loads all of the LocationDetailsViewController's properties.  
+        // Since this prepareForSegue method (and therefore, the didSet code block) get called before LocationDetailsViewController's viewDidLoad() method,
+        // all of the up-to-date values are shown to the user in the LocationDetailsViewController's screen.
+      }
+    }
+  }
+  //#####################################################################
   // MARK: - UIViewController - Managing the View
   
   // viewDidLoad() is called after prepareForSegue().
