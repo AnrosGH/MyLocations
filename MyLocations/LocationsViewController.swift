@@ -214,6 +214,28 @@ extension LocationsViewController: UITableViewDataSource {
     return cell
   }
   //#####################################################################
+  
+  override func tableView(tableView: UITableView, commitEditingStyle editingStyle: UITableViewCellEditingStyle, forRowAtIndexPath indexPath: NSIndexPath) {
+    // Implementing this optional protocol function enables swipe-to-delete.
+    
+    if editingStyle == .Delete {
+      
+      // Get the Location object from the selected row.
+      let location = fetchedResultsController.objectAtIndexPath(indexPath) as Location
+      
+      // Ask the managed object context to delete the object from the scratch pad.
+      // This will trigger the NSFetchedResultsController to send a notification to the delegate (NSFetchedResultsChangeDelete), 
+      // which then removes the corresponding row from the table.
+      managedObjectContext.deleteObject(location)
+      
+      var error: NSError?
+      
+      if !managedObjectContext.save(&error) {
+        fatalCoreDataError(error)
+      }
+    }
+  }
+  //#####################################################################
 }
 //#####################################################################
 // MARK: - Fetched Results Controller Delegate
