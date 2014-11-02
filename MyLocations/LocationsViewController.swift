@@ -142,6 +142,10 @@ class LocationsViewController: UITableViewController {
     //------------------------------------------
     // Perform an initial fetch from the database of Location objects.
     performFetch()
+    //------------------------------------------
+    // In addition to swipe-to-delete enabled by implementing UITableView Data Source Protocol method, tableview:commitEditingStyle:forRowAtIndexPath,
+    // Add an Edit button in the in the navigation bar that triggers an altermate mode for deleting (and sometimes moving) rows.
+    navigationItem.rightBarButtonItem = editButtonItem()
   }
   //#####################################################################
   // MARK: - Core Data
