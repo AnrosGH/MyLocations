@@ -462,11 +462,12 @@
                     <tabBarItem key="tabBarItem" title="Map" id="ei5-eY-mIM"/>
                     <connections>
                         <outlet property="mapView" destination="y1N-Zu-UWU" id="RWe-yX-8IJ"/>
+                        <segue destination="Nuf-f6-wqf" kind="modal" identifier="EditLocation" id="TGb-O0-IDE"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="QlS-xt-qiB" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="388" y="1075"/>
+            <point key="canvasLocation" x="910" y="1083"/>
         </scene>
     </scenes>
     <resources>
@@ -478,6 +479,6 @@
         <simulatedScreenMetrics key="destination" type="retina4"/>
     </simulatedMetricsContainer>
     <inferredMetricsTieBreakers>
-        <segue reference="1uu-S9-Tsf"/>
+        <segue reference="TGb-O0-IDE"/>
     </inferredMetricsTieBreakers>
 </document>

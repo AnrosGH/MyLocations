@@ -20,6 +20,23 @@ class MapViewController: UIViewController {
   var locations = [Location]()
   
   //#####################################################################
+  // MARK: - Segues
+  
+  override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    
+    if segue.identifier == "EditLocation" {
+      
+      let navigationController = segue.destinationViewController as UINavigationController
+      let controller = navigationController.topViewController as LocationDetailsViewController
+      controller.managedObjectContext = managedObjectContext
+      
+      // Get the Location object to edit from the locations array, using the tag property of the sender button as the index into the array.
+      let button = sender as UIButton
+      let location = locations[button.tag]
+      controller.locationToEdit = location
+    }
+  }
+  //#####################################################################
   // MARK: - UIViewController - Managing the View
   
   // viewDidLoad() is called after prepareForSegue().
@@ -129,6 +146,10 @@ class MapViewController: UIViewController {
   //#####################################################################
   
   func showLocationDetails(sender: UIButton) {
+    
+    // Because the segue isn’t connected to any particular control in the view controller, the segue must be invoked manually.
+    // Send along the button object as the sender, so its tag property can be accessed in method prepareForSegue().
+    performSegueWithIdentifier("EditLocation", sender: sender)
   }
   //#####################################################################
 }
