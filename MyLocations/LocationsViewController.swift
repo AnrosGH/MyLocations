@@ -35,22 +35,31 @@ class LocationsViewController: UITableViewController {
     // Set up an NSFetchRequest object to be used for describing which objects will be fetched from the data store.
     let fetchRequest = NSFetchRequest()
     
+    //--------------------
     // Set the entity to "Location".
     let entity = NSEntityDescription.entityForName("Location", inManagedObjectContext: self.managedObjectContext)
     fetchRequest.entity = entity
     
+    //--------------------
     // Sort Locations by date in ascending order.
-    let sortDescriptor = NSSortDescriptor(key: "date", ascending: true)
-    fetchRequest.sortDescriptors = [sortDescriptor]
+    //let sortDescriptor = NSSortDescriptor(key: "date", ascending: true)
+    //fetchRequest.sortDescriptors = [sortDescriptor]
     
+    // Sort by category and then by date.
+    let sortDescriptor1 = NSSortDescriptor(key: "category", ascending: true)
+    let sortDescriptor2 = NSSortDescriptor(key: "date", ascending: true)
+    fetchRequest.sortDescriptors = [sortDescriptor1, sortDescriptor2]
+    
+    //--------------------
     // Specify the number of objects that will be fetched at a time.
     fetchRequest.fetchBatchSize = 20
     
+    //--------------------
     // Create the fetchedResultsController
     let fetchedResultsController = NSFetchedResultsController(
       fetchRequest: fetchRequest,
-      managedObjectContext: self.managedObjectContext,                 // "self" is required since this is inside a Closure.
-      sectionNameKeyPath: nil,
+      managedObjectContext: self.managedObjectContext,            // "self" is required since this is inside a Closure.
+      sectionNameKeyPath: "category",                             // Group the search results based on the value of the "category" attribute.
       cacheName: "Locations")
     
     // Make this view controller the NSFetchedResultsController delegate so that it is informed that objects have been changed, added, or deleted and the table can be updated.
@@ -238,6 +247,24 @@ extension LocationsViewController: UITableViewDataSource {
         fatalCoreDataError(error)
       }
     }
+  }
+  //#####################################################################
+  // MARK: - Tableview Sections
+  
+  override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+          
+    // The sections property is an optional, so it needs to be unwrapped before it can be used. 
+    // Here it is known for sure that sections will never be nil – after all, NSFetchedResultsController is told to group the search results 
+    // based on the value of the “category” field.  So "sections" can safely be forced unwrapped using the exclamation mark.
+          
+    return fetchedResultsController.sections!.count
+  }
+  //#####################################################################
+  
+  override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
+    
+    let sectionInfo = fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
+    return sectionInfo.name
   }
   //#####################################################################
 }
