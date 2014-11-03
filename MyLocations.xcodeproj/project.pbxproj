@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		64BF450F1A07C956001A4EDC /* MapKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 64BF450E1A07C956001A4EDC /* MapKit.framework */; };
+		64BF45111A07CA77001A4EDC /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64BF45101A07CA77001A4EDC /* MapViewController.swift */; };
 		64C1B74B19F5816B00E334F0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C1B74A19F5816B00E334F0 /* AppDelegate.swift */; };
 		64C1B74D19F5816B00E334F0 /* CurrentLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C1B74C19F5816B00E334F0 /* CurrentLocationViewController.swift */; };
 		64C1B74F19F5816B00E334F0 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C1B74E19F5816B00E334F0 /* SecondViewController.swift */; };
@@ -37,6 +38,7 @@
 
 /* Begin PBXFileReference section */
 		64BF450E1A07C956001A4EDC /* MapKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MapKit.framework; path = System/Library/Frameworks/MapKit.framework; sourceTree = SDKROOT; };
+		64BF45101A07CA77001A4EDC /* MapViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MapViewController.swift; sourceTree = "<group>"; };
 		64C1B74519F5816B00E334F0 /* MyLocations.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MyLocations.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		64C1B74919F5816B00E334F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		64C1B74A19F5816B00E334F0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -110,6 +112,7 @@
 				64CCD77A19FE84260079CD4E /* LocationDetailsViewController.swift */,
 				64CCD77C19FFCCCC0079CD4E /* CategoryPickerViewController.swift */,
 				64CCD77E1A0024760079CD4E /* HudView.swift */,
+				64BF45101A07CA77001A4EDC /* MapViewController.swift */,
 				64C1B74E19F5816B00E334F0 /* SecondViewController.swift */,
 				64C1B75319F5816B00E334F0 /* Images.xcassets */,
 				64C1B75519F5816B00E334F0 /* LaunchScreen.xib */,
@@ -250,6 +253,7 @@
 				64CCD77F1A0024760079CD4E /* HudView.swift in Sources */,
 				64CCD7811A0141870079CD4E /* Functions.swift in Sources */,
 				64CCD78C1A02E1120079CD4E /* LocationCell.swift in Sources */,
+				64BF45111A07CA77001A4EDC /* MapViewController.swift in Sources */,
 				64C1B74B19F5816B00E334F0 /* AppDelegate.swift in Sources */,
 				64CCD77D19FFCCCD0079CD4E /* CategoryPickerViewController.swift in Sources */,
 				64CCD7861A0171A40079CD4E /* Location.swift in Sources */,
