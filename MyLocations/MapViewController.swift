@@ -31,6 +31,7 @@ class MapViewController: UIViewController {
     updateLocations()
     
     if !locations.isEmpty {
+      // Show the user's locations the first time the user switches to the Map tab.
       showLocations()
     }
   }
@@ -126,8 +127,60 @@ class MapViewController: UIViewController {
     return mapView.regionThatFits(region)
   }
   //#####################################################################
+  
+  func showLocationDetails(sender: UIButton) {
+  }
+  //#####################################################################
 }
 //#####################################################################
 
 extension MapViewController: MKMapViewDelegate {
+  
+  func mapView(mapView: MKMapView!, viewForAnnotation annotation: MKAnnotation!) -> MKAnnotationView! {
+    
+    // Because MKAnnotation is a protocol, there may be other objects apart from the Location object that want to be annotations on the map.  Leave those alone.
+    if annotation is Location {
+      
+      let identifier = "Location"
+      var annotationView = mapView.dequeueReusableAnnotationViewWithIdentifier(identifier) as MKPinAnnotationView!
+      
+      if annotationView == nil {
+        // A recyclable annotation view is not available, so create a new one.
+      
+        annotationView = MKPinAnnotationView(annotation: annotation, reuseIdentifier: identifier)
+      
+        // Set some properties to configure the look and feel of the annotation view.
+        annotationView.enabled = true
+        annotationView.canShowCallout = true
+        annotationView.animatesDrop = false
+        annotationView.pinColor = .Green
+      
+        // Create a new UIButton object that looks like a detail disclosure button (a blue circled i). 
+        let rightButton = UIButton.buttonWithType(.DetailDisclosure) as UIButton
+        
+        // Use the target-action pattern to hook up the button’s “Touch Up Inside” event with the showLocationDetails() method.
+        // The colon in "showLocationDetails:" means the method takes one parameter, usually called "sender", that refers to the control that sent the action message.
+        // The colon comes from Objective-C, which is obsessed with colons and square brackets.
+        rightButton.addTarget(self, action: Selector("showLocationDetails:"), forControlEvents: .TouchUpInside)
+        
+        // Add the button to the annotation view’s accessory view.
+        annotationView.rightCalloutAccessoryView = rightButton
+      
+      //------------------------------------------
+      } else {
+        annotationView.annotation = annotation
+      }
+      //------------------------------------------
+      // Obtain a reference to the detail disclosure button.
+      let button = annotationView.rightCalloutAccessoryView as UIButton
+      
+      if let index = find(locations, annotation as Location) {
+        // Set the button's tag to the index of the Location object in the locations array.
+        button.tag = index
+      }
+      return annotationView
+    }
+    return nil
+  }
+  //#####################################################################
 }
