@@ -26,6 +26,8 @@ class Location: NSManagedObject, MKAnnotation {
   //#####################################################################
   // MARK: - MKAnnotation Protocol
   
+  // Implementing this Protocol allows a Location object to be seen as an annotation so that it can be placed on a map view.
+  
   // Read-only Computed Properties
   // Whenever one of these properties is accessed, the logic from their code block is performed.
   

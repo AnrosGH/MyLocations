@@ -29,6 +29,10 @@ class MapViewController: UIViewController {
     
     // Fetch the Location objects and show them on the map when the view loads.
     updateLocations()
+    
+    if !locations.isEmpty {
+      showLocations()
+    }
   }
   //#####################################################################
   // MARK: - Action Methods
@@ -41,7 +45,12 @@ class MapViewController: UIViewController {
   //#####################################################################
 
   @IBAction func showLocations() {
-      
+    
+    // Calculate a reasonable region that fits all the Location objects.
+    let region = regionForAnnotations(locations)
+    
+    // Set the region on the map view.
+    mapView.setRegion(region, animated: true)
   }
   //#####################################################################
   // MARK: - My Methods
@@ -71,6 +80,50 @@ class MapViewController: UIViewController {
         
     locations = foundObjects as [Location]
     mapView.addAnnotations(locations)
+  }
+  //#####################################################################
+  
+  func regionForAnnotations(annotations: [MKAnnotation]) -> MKCoordinateRegion {
+    
+    // By looking at the highest and lowest values for the latitude and longitude of all the Location objects, 
+    // calculate a region and tell the map view to zoom to that region.
+    
+    var region: MKCoordinateRegion
+    
+    switch annotations.count {
+      
+      case 0:
+        // No annotations.  Center the map on the user's current position.
+        region = MKCoordinateRegionMakeWithDistance(mapView.userLocation.coordinate, 1000, 1000)
+
+      //------------------------------------------
+      case 1:
+        // Center the map on the one annotation that exists.
+        let annotation = annotations[annotations.count - 1]
+        region = MKCoordinateRegionMakeWithDistance(annotation.coordinate, 1000, 1000)
+      
+      //------------------------------------------
+      default:
+        var topLeftCoord = CLLocationCoordinate2D(latitude: -90, longitude: 180)
+        var bottomRightCoord = CLLocationCoordinate2D(latitude: 90, longitude: -180)
+    
+        for annotation in annotations {
+          topLeftCoord.latitude = max(topLeftCoord.latitude, annotation.coordinate.latitude)
+          topLeftCoord.longitude = min(topLeftCoord.longitude, annotation.coordinate.longitude)
+          bottomRightCoord.latitude = min(bottomRightCoord.latitude,annotation.coordinate.latitude)
+          bottomRightCoord.longitude = max(bottomRightCoord.longitude, annotation.coordinate.longitude)
+        }
+    
+        let center = CLLocationCoordinate2D( latitude: topLeftCoord.latitude - (topLeftCoord.latitude - bottomRightCoord.latitude) / 2,
+                                             longitude: topLeftCoord.longitude - (topLeftCoord.longitude - bottomRightCoord.longitude) / 2)
+    
+        let extraSpace = 1.1
+        let span = MKCoordinateSpan(latitudeDelta: abs(topLeftCoord.latitude - bottomRightCoord.latitude) * extraSpace,
+                                    longitudeDelta: abs(topLeftCoord.longitude - bottomRightCoord.longitude) * extraSpace)
+    
+        region = MKCoordinateRegion(center: center, span: span)
+    }
+    return mapView.regionThatFits(region)
   }
   //#####################################################################
 }
