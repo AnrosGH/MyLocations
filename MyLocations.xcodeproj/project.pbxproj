@@ -11,7 +11,6 @@
 		64BF45111A07CA77001A4EDC /* MapViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64BF45101A07CA77001A4EDC /* MapViewController.swift */; };
 		64C1B74B19F5816B00E334F0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C1B74A19F5816B00E334F0 /* AppDelegate.swift */; };
 		64C1B74D19F5816B00E334F0 /* CurrentLocationViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C1B74C19F5816B00E334F0 /* CurrentLocationViewController.swift */; };
-		64C1B74F19F5816B00E334F0 /* SecondViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64C1B74E19F5816B00E334F0 /* SecondViewController.swift */; };
 		64C1B75219F5816B00E334F0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 64C1B75019F5816B00E334F0 /* Main.storyboard */; };
 		64C1B75419F5816B00E334F0 /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 64C1B75319F5816B00E334F0 /* Images.xcassets */; };
 		64C1B75719F5816B00E334F0 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 64C1B75519F5816B00E334F0 /* LaunchScreen.xib */; };
@@ -43,7 +42,6 @@
 		64C1B74919F5816B00E334F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		64C1B74A19F5816B00E334F0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		64C1B74C19F5816B00E334F0 /* CurrentLocationViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CurrentLocationViewController.swift; sourceTree = "<group>"; };
-		64C1B74E19F5816B00E334F0 /* SecondViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecondViewController.swift; sourceTree = "<group>"; };
 		64C1B75119F5816B00E334F0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		64C1B75319F5816B00E334F0 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		64C1B75619F5816B00E334F0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -113,7 +111,6 @@
 				64CCD77C19FFCCCC0079CD4E /* CategoryPickerViewController.swift */,
 				64CCD77E1A0024760079CD4E /* HudView.swift */,
 				64BF45101A07CA77001A4EDC /* MapViewController.swift */,
-				64C1B74E19F5816B00E334F0 /* SecondViewController.swift */,
 				64C1B75319F5816B00E334F0 /* Images.xcassets */,
 				64C1B75519F5816B00E334F0 /* LaunchScreen.xib */,
 				64C1B74819F5816B00E334F0 /* Supporting Files */,
@@ -249,7 +246,6 @@
 				64CCD77B19FE84260079CD4E /* LocationDetailsViewController.swift in Sources */,
 				64CCD78A1A02D3660079CD4E /* LocationsViewController.swift in Sources */,
 				64CCD7841A016E8A0079CD4E /* DataModel.xcdatamodeld in Sources */,
-				64C1B74F19F5816B00E334F0 /* SecondViewController.swift in Sources */,
 				64CCD77F1A0024760079CD4E /* HudView.swift in Sources */,
 				64CCD7811A0141870079CD4E /* Functions.swift in Sources */,
 				64CCD78C1A02E1120079CD4E /* LocationCell.swift in Sources */,

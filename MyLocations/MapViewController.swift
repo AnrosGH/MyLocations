@@ -14,11 +14,35 @@ class MapViewController: UIViewController {
   
   @IBOutlet weak var mapView: MKMapView!
   //------------------------------------------
-  var managedObjectContext: NSManagedObjectContext!
+  //var managedObjectContext: NSManagedObjectContext!
   //------------------------------------------
   // For use with the Locations button.
   var locations = [Location]()
+  //------------------------------------------
+  // Set up a "Property Observer" using a "didSet block".
+  // The code in the didSet block is performed whenever the variable is assigned a new value.
   
+  // As soon as managedObjectContext is given a value – which happens in AppDelegate during app startup – 
+  // the didSet block tells the NSNotificationCenter to add an observer for the NSManagedObjectContextObjectsDidChangeNotification.
+  // This notification is sent out whenever the data store changes.
+  
+  var managedObjectContext: NSManagedObjectContext! {
+    didSet {
+      NSNotificationCenter.defaultCenter().addObserverForName(NSManagedObjectContextObjectsDidChangeNotification,
+                                                              object: managedObjectContext,
+                                                              queue: NSOperationQueue.mainQueue()) { notification in
+      
+        // Because this particular closure gets called by NSNotificationCenter, a NSNotification object is passed in as the "notification" parameter. 
+        // Since this notification object is not being used anywhere in the closure, the parameter could also be written as "{ _ in".
+      
+        if self.isViewLoaded() {
+          // Fetch all the Location objects again. 
+          // This throws away all the old pins and it makes new pins for all the newly fetched Location objects.
+          self.updateLocations()
+        }
+      }
+    }
+  }
   //#####################################################################
   // MARK: - Segues
   
