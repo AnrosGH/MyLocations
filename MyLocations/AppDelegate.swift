@@ -55,6 +55,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       let navigationController = tabBarViewControllers[1] as UINavigationController
       let locationsViewController = navigationController.viewControllers[0] as LocationsViewController
       locationsViewController.managedObjectContext = managedObjectContext
+      
+      // Do the same for the MapViewController.
+      let mapViewController = tabBarViewControllers[2] as MapViewController
+      mapViewController.managedObjectContext = managedObjectContext
       //--------------------
       // FIX FOR iOS 7 & 8 BUG.
       // THIS FIX DID NOT WORK!
