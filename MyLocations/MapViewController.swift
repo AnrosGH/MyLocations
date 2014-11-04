@@ -32,13 +32,20 @@ class MapViewController: UIViewController {
                                                               object: managedObjectContext,
                                                               queue: NSOperationQueue.mainQueue()) { notification in
       
-        // Because this particular closure gets called by NSNotificationCenter, a NSNotification object is passed in as the "notification" parameter. 
+        // Because this particular closure gets called by NSNotificationCenter, an NSNotification object is passed in as the "notification" parameter. 
         // Since this notification object is not being used anywhere in the closure, the parameter could also be written as "{ _ in".
       
         if self.isViewLoaded() {
           // Fetch all the Location objects again. 
           // This throws away all the old pins and it makes new pins for all the newly fetched Location objects.
           self.updateLocations()
+          
+          // Testing userInfo dictionary in NSNotification object.
+          if let dictionary = notification.userInfo {
+            println(dictionary["inserted"])
+            println(dictionary["deleted"])
+            println(dictionary["updated"])
+          }
         }
       }
     }
