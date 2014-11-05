@@ -296,13 +296,10 @@ class LocationDetailsViewController: UITableViewController {
   //#####################################################################
 }
 //#####################################################################
-// MARK: -
-// MARK: Table View Delegate
+// MARK: - Table View Delegate
 
 extension LocationDetailsViewController: UITableViewDelegate {
-      
-  //#####################################################################
-      
+  
   override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
             
     if indexPath.section == 0 && indexPath.row == 0 {
@@ -363,15 +360,19 @@ extension LocationDetailsViewController: UITableViewDelegate {
     // When the user taps anywhere inside the first cell, the text view should activate, even if the tap wasn’t on the text view itself.
       
     if indexPath.section == 0 && indexPath.row == 0 {
-      // The user tapped somewhere in the first row - the row with the description text.
+      // The user tapped somewhere in the first section, first row - the row with the description text.
       descriptionTextView.becomeFirstResponder()
+      
+    } else if indexPath.section == 1 && indexPath.row == 0 {
+      // The user tapped somewhere in the second section, first row - the row with Add Photo.
+      //takePhotoWithCamera()
+      choosePhotoFromLibrary()
     }
   }
   //#####################################################################
 }
 //#####################################################################
-// MARK: -
-// MARK: Text View Delegate
+// MARK: - Text View Delegate
 
 extension LocationDetailsViewController: UITextViewDelegate {
         
@@ -390,4 +391,41 @@ extension LocationDetailsViewController: UITextViewDelegate {
   }
   //#####################################################################
 }
+//#####################################################################
+// MARK: - Image Picker Delegate
 
+// The view controller must conform to both UIImagePickerControllerDelegate and UINavigationControllerDelegate for image picking to work, 
+// but none of the UINavigationControllerDelegate methods have to be implemented.
+
+extension LocationDetailsViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+  
+  func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
+      
+      dismissViewControllerAnimated(true, completion: nil)
+  }
+  //#####################################################################
+  
+  func imagePickerControllerDidCancel(picker: UIImagePickerController) {
+    
+    dismissViewControllerAnimated(true, completion: nil)
+  }
+  //#####################################################################
+  
+  func takePhotoWithCamera() {
+      let imagePicker = UIImagePickerController()
+      imagePicker.sourceType = .Camera
+      imagePicker.delegate = self
+      imagePicker.allowsEditing = true
+      presentViewController(imagePicker, animated: true, completion: nil)
+  }
+  //#####################################################################
+  
+  func choosePhotoFromLibrary() {
+    let imagePicker = UIImagePickerController()
+    imagePicker.sourceType = .PhotoLibrary
+    imagePicker.delegate = self
+    imagePicker.allowsEditing = true
+    presentViewController(imagePicker, animated: true, completion: nil)
+  }
+  //#####################################################################
+}
