@@ -213,6 +213,7 @@ class MapViewController: UIViewController {
   //#####################################################################
 }
 //#####################################################################
+// MARK: - Map View Delegate
 
 extension MapViewController: MKMapViewDelegate {
   
@@ -264,3 +265,19 @@ extension MapViewController: MKMapViewDelegate {
   }
   //#####################################################################
 }
+//#####################################################################
+// MARK: - Navigation Bar Delegate
+
+extension MapViewController: UINavigationBarDelegate {
+  
+  // This delegate method is required to prevent a gap between the top of the screen and the navigation bar. 
+  // That happens because, as of iOS 7, the status bar is no longer a separate area but is directly drawn on top of the view controller.
+  
+  func positionForBar(bar: UIBarPositioning) -> UIBarPosition {
+    // Tell the navigation bar to extend under the status bar area.
+    
+    return .TopAttached
+  }
+  //#####################################################################
+}
+
