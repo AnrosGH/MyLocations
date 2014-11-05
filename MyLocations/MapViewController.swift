@@ -17,6 +17,9 @@ class MapViewController: UIViewController {
   //var managedObjectContext: NSManagedObjectContext!
   //------------------------------------------
   // For use with the Locations button.
+  
+  // Create a new, empty array for storing Location objects (denoted by "[Location]") and assign it to the "locations" instance variable.
+  // This "()" instantiates the array.
   var locations = [Location]()
   //------------------------------------------
   // Set up a "Property Observer" using a "didSet block".
@@ -33,18 +36,43 @@ class MapViewController: UIViewController {
                                                               queue: NSOperationQueue.mainQueue()) { notification in
       
         // Because this particular closure gets called by NSNotificationCenter, an NSNotification object is passed in as the "notification" parameter. 
-        // Since this notification object is not being used anywhere in the closure, the parameter could also be written as "{ _ in".
+        // if this notification object was not being used anywhere in the closure, then the parameter could have been written as "{ _ in".
       
         if self.isViewLoaded() {
+          
+          // CODE REPLACED WITH MORE EFFICIENT CODE BELOW (Exercise on page 218).
           // Fetch all the Location objects again. 
           // This throws away all the old pins and it makes new pins for all the newly fetched Location objects.
-          self.updateLocations()
+          //self.updateLocations()
           
-          // Testing userInfo dictionary in NSNotification object.
           if let dictionary = notification.userInfo {
-            println(dictionary["inserted"])
-            println(dictionary["deleted"])
-            println(dictionary["updated"])
+            
+            // Print out userInfo dictionary in NSNotification object.
+            //println(dictionary["inserted"])
+            //println(dictionary["deleted"])
+            //println(dictionary["updated"])
+            
+            // NOTE: dictionary["updated"] is not an array of Location objects but an NSSet of Location objects.
+            // A set (or NSSet) is like an array but the items inside it don't have a specific order.
+            //------------------------------------------
+            if let inserted: AnyObject = dictionary["inserted"] {
+              let asSet = inserted as NSSet
+              let asArray = asSet.allObjects as [Location]
+              self.mapView.addAnnotations(asArray)
+            }
+            //------------------------------------------
+            if let deleted: AnyObject = dictionary["deleted"] {
+              let asSet = deleted as NSSet
+              let asArray = asSet.allObjects as [Location]
+              self.mapView.removeAnnotations(asArray)
+            }
+            //------------------------------------------
+            if let updated: AnyObject = dictionary["updated"] {
+              let asSet = updated as NSSet
+              let asArray = asSet.allObjects as [Location]
+              self.mapView.removeAnnotations(asArray)
+              self.mapView.addAnnotations(asArray)
+            }
           }
         }
       }
