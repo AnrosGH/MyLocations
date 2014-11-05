@@ -42,6 +42,36 @@ class LocationDetailsViewController: UITableViewController {
   @IBOutlet weak var addressLabel: UILabel!
   @IBOutlet weak var dateLabel: UILabel!
   //------------------------------------------
+  // Showing the image
+  @IBOutlet weak var imageView: UIImageView!
+  @IBOutlet weak var addPhotoLabel: UILabel!
+  
+  //------------------------------------------
+  //var image: UIImage?   // If no photo is picked yet, image is nil, so this must be an optional.
+  
+  // Set up a "Property Observer" using a "didSet block" instead of just declaring the variable as above.
+  // The code in the didSet block is performed whenever the variable is assigned a new value.
+  
+  var image: UIImage? {
+    didSet {
+      
+      // Store the photo in the image instace variable for later use.
+      if let image = image {
+        // Put the image into the image view.
+        imageView.image = image
+        
+        // Make the image view visible.
+        imageView.hidden = false
+        
+        // Properly size the image view within the Add Photo table view cell.
+        imageView.frame = CGRect(x: 10, y: 10, width: 260, height: 260)
+        
+        // Hide the label that prompts the user to add a photo.
+        addPhotoLabel.hidden = true
+      }
+    }
+  }
+  //------------------------------------------
   // Location Coordinates and Address
   
   // Contains the latitude and longitude from the CLLocation object received from the location manager. 
@@ -404,8 +434,28 @@ extension LocationDetailsViewController: UITextViewDelegate {
 extension LocationDetailsViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
   
   func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [NSObject : AnyObject]) {
-      
-      dismissViewControllerAnimated(true, completion: nil)
+    // Called when the user has selected a photo in the image picker.
+    
+    // "[NSObject : AnyObject]" indicates that input parameter, info, is a dictionary with keys of type NSObject and values of type AnyObject.
+    
+    // Dictionaries always return optionals, because there is a theoretical possibility that the key for which data is being requested – 
+    // UIImagePickerControllerEditedImage in this case – doesn’t actually exist in the dictionary.
+    // Under normal circumstances this optional, info[UIImagePickerControllerEditedImage], would be unwrapped,
+    // but here the image instance variable is an optional itself so no unwrapping is necessary.
+    
+    // Use he UIImagePickerControllerEditedImage key to retrieve a UIImage object that contains the image after the Move and Scale operations on the original image.
+    image = info[UIImagePickerControllerEditedImage] as UIImage?
+    
+    // THIS CODE WAS REPLACED WITH A didSet BLOCK FOR VARIABLE, image.
+    // Store the photo in the image instace variable for later use.
+    /*
+    if let image = image {
+      // Put the image in the Add Photo table view cell.
+      showImage(image)
+    }
+    */
+    
+    dismissViewControllerAnimated(true, completion: nil)
   }
   //#####################################################################
   
@@ -451,20 +501,42 @@ extension LocationDetailsViewController: UIImagePickerControllerDelegate, UINavi
   //#####################################################################
   
   func takePhotoWithCamera() {
-      let imagePicker = UIImagePickerController()
-      imagePicker.sourceType = .Camera
-      imagePicker.delegate = self
-      imagePicker.allowsEditing = true
-      presentViewController(imagePicker, animated: true, completion: nil)
+    let imagePicker = UIImagePickerController()
+    
+    imagePicker.sourceType = .Camera
+    
+    imagePicker.delegate = self
+    imagePicker.allowsEditing = true
+    presentViewController(imagePicker, animated: true, completion: nil)
   }
   //#####################################################################
   
   func choosePhotoFromLibrary() {
     let imagePicker = UIImagePickerController()
+    
     imagePicker.sourceType = .PhotoLibrary
+    
     imagePicker.delegate = self
     imagePicker.allowsEditing = true
     presentViewController(imagePicker, animated: true, completion: nil)
   }
+  //#####################################################################
+  // THIS CODE WAS MOVED TO A didSet BLOCK FOR VARIABLE, image.
+  /*
+  func showImage(image: UIImage) {
+    
+    // Put the image into the image view.
+    imageView.image = image
+    
+    // Make the image view visible.
+    imageView.hidden = false
+    
+    // Properly size the image view within the Add Photo table view cell.
+    imageView.frame = CGRect(x: 10, y: 10, width: 260, height: 260)
+    
+    // Hide the label that prompts the user to add a photo.
+    addPhotoLabel.hidden = true
+  }
+  */
   //#####################################################################
 }
