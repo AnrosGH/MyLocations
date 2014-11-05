@@ -63,6 +63,8 @@ class LocationDetailsViewController: UITableViewController {
         // Make the image view visible.
         imageView.hidden = false
         
+        // By default, an image view will stretch the image to fit the entire content area. 
+        // To keep the image's aspect ratio intact as it is resized, in the storyboard set the Image View's MODE to Aspect Fit.
         // Properly size the image view within the Add Photo table view cell.
         imageView.frame = CGRect(x: 10, y: 10, width: 260, height: 260)
         
@@ -337,6 +339,16 @@ extension LocationDetailsViewController: UITableViewDelegate {
       return 88
             
     //------------------------------------------
+    } else if indexPath.section == 1 {
+      if imageView.hidden {
+        // No image.  Set the height to standard height.
+        return 44
+        
+      } else {
+        // An image exists, so set the height to 260 points for the image view plus 10 points of margin on the top and bottom.
+        return 280
+      }
+    //------------------------------------------
     } else if indexPath.section == 2 && indexPath.row == 2 {
       // Set the height of the Address Cell.
       // The cell height may be anywhere from one line of text to several, depending on how big the address string is.
@@ -454,6 +466,9 @@ extension LocationDetailsViewController: UIImagePickerControllerDelegate, UINavi
       showImage(image)
     }
     */
+    
+    // Refresh the table view to set the photo row to the proper height to accommodate a photo (or not).
+    tableView.reloadData()
     
     dismissViewControllerAnimated(true, completion: nil)
   }
