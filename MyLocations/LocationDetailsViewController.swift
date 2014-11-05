@@ -365,8 +365,7 @@ extension LocationDetailsViewController: UITableViewDelegate {
       
     } else if indexPath.section == 1 && indexPath.row == 0 {
       // The user tapped somewhere in the second section, first row - the row with Add Photo.
-      //takePhotoWithCamera()
-      choosePhotoFromLibrary()
+      pickPhoto()
     }
   }
   //#####################################################################
@@ -408,6 +407,41 @@ extension LocationDetailsViewController: UIImagePickerControllerDelegate, UINavi
   func imagePickerControllerDidCancel(picker: UIImagePickerController) {
     
     dismissViewControllerAnimated(true, completion: nil)
+  }
+  //#####################################################################
+  
+  func pickPhoto() {
+      
+    if true || UIImagePickerController.isSourceTypeAvailable(.Camera) {  // Adding "true ||" introduces into the iOS Simulator fake availability of the camera.
+    //if UIImagePickerController.isSourceTypeAvailable(.Camera) {
+      // The user's device has a camera.
+      showPhotoMenu()
+    
+    } else {
+      // The user's device does not have a camera.
+      choosePhotoFromLibrary()
+    }
+  }
+  //#####################################################################
+    
+  func showPhotoMenu() {
+    // Show an alert controller with an action sheet that slides in from the bottom of the screen.
+    
+    let alertController = UIAlertController(title: nil, message: nil, preferredStyle: .ActionSheet)
+    
+    let cancelAction = UIAlertAction(title: "Cancel", style: .Cancel, handler: nil)
+    alertController.addAction(cancelAction)
+    
+    // handler: is given a Closure that calls the appropriate method.
+    // The "_" wildcard is being used to ignore the parameter that is passed to this closure (which is a reference to the UIAlertAction itself).
+    
+    let takePhotoAction = UIAlertAction(title: "Take Photo", style: .Default, handler: { _ in self.takePhotoWithCamera() })
+    alertController.addAction(takePhotoAction)
+    
+    let chooseFromLibraryAction = UIAlertAction(title: "Choose From Library", style: .Default, handler: { _ in self.choosePhotoFromLibrary() })
+    alertController.addAction(chooseFromLibraryAction)
+    
+    presentViewController(alertController, animated: true, completion: nil)
   }
   //#####################################################################
   
