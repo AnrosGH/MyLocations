@@ -342,59 +342,54 @@ class LocationDetailsViewController: UITableViewController {
 extension LocationDetailsViewController: UITableViewDelegate {
   
   override func tableView(tableView: UITableView, heightForRowAtIndexPath indexPath: NSIndexPath) -> CGFloat {
-            
-    if indexPath.section == 0 && indexPath.row == 0 {
-      // Set the height of the Description Cell.
-      return 88
-            
-    //------------------------------------------
-    } else if indexPath.section == 1 {
-      if imageView.hidden {
-        // No image.  Set the height to standard height.
+    
+    switch (indexPath.section, indexPath.row) {
+      case (0, 0):
+        // Set the height of the Description Cell.
+        return 88
+      
+      //------------------------------------------
+      case (1, _):
+        // For no image, set the height to standard height.
+        // If an image exists, then
+        //   The height is dynamically calculated by the Property Observer for instance variable, image, anytime the variable's value is changed.
+        //   Add 10 points of margin on the top and bottom.
+        return imageView.hidden ? 44 : imageView.frame.height + 20
+
+      //------------------------------------------
+      case (2, 2):
+        // Set the height of the Address Cell.
+        // The cell height may be anywhere from one line of text to several, depending on how big the address string is.
+        
+        // frame property - a CGRect that describes the position and size of a view.
+        // CGRect         - a struct that describes a rectangle with an origin made up of a CGPoint value (X, Y), and a CGSize value for width and height.
+        
+        // frame  = position of a rectangle with respect to it's superview.
+        // bounds = position of a rectangle with respect to the frame.
+        
+        // Change the width of the label to be 115 points less than the width of the screen and set the height to be excessively high.
+        // Because the frame property is being changed, the multi-line UILabel (the text for which was set in viewDidLoad())
+        // will now word-wrap the text to fit the requested width.
+        addressLabel.frame.size = CGSize(width: view.bounds.size.width - 115, height: 10000)
+        
+        // Now that the label has word-wrapped its contents, size the label to fit its contents.
+        // (Same as "Editor > Size to Fit Content" in the storyboard.)
+        addressLabel.sizeToFit()
+        
+        // The call to sizeToFit() removed any spare space to the right and bottom of the label. It may also have changed the width
+        // so that the text fits inside the label as snugly as possible.
+        // Because of these possible changes, the X-position of the label may no longer be correct.
+        // A “detail” label like this should be placed against the right edge of the screen with a 15-point margin between them.
+        // That’s done by changing the frame’s origin.x position.
+        addressLabel.frame.origin.x = view.bounds.size.width - addressLabel.frame.size.width - 15
+        
+        // Now that the label's height is set, add a margin (10 points on top and bottom).
+        return addressLabel.frame.size.height + 20
+      
+      //------------------------------------------
+      default:
+        // All other cells have a standard height.
         return 44
-        
-      } else {
-        // An image exists, so set the height to 260 points for the image view plus 10 points of margin on the top and bottom.
-        //return 280
-        
-        // The height is dynamically calculated by the Property Observer for instance variable, image, anytime the variable's value is changed.
-        // Add 10 points of margin on the top and bottom.
-        return imageView.frame.height + 20
-      }
-    //------------------------------------------
-    } else if indexPath.section == 2 && indexPath.row == 2 {
-      // Set the height of the Address Cell.
-      // The cell height may be anywhere from one line of text to several, depending on how big the address string is.
-            
-      // frame property - a CGRect that describes the position and size of a view.
-      // CGRect         - a struct that describes a rectangle with an origin made up of a CGPoint value (X, Y), and a CGSize value for width and height.
-            
-      // frame  = position of a rectangle with respect to it's superview.
-      // bounds = position of a rectangle with respect to the frame.
-            
-      // Change the width of the label to be 115 points less than the width of the screen and set the height to be excessively high.
-      // Because the frame property is being changed, the multi-line UILabel (the text for which was set in viewDidLoad()) 
-      // will now word-wrap the text to fit the requested width.
-      addressLabel.frame.size = CGSize(width: view.bounds.size.width - 115, height: 10000)
-            
-      // Now that the label has word-wrapped its contents, size the label to fit its contents. 
-      // (Same as "Editor > Size to Fit Content" in the storyboard.)
-      addressLabel.sizeToFit()
-            
-      // The call to sizeToFit() removed any spare space to the right and bottom of the label. It may also have changed the width 
-      // so that the text fits inside the label as snugly as possible.
-      // Because of these possible changes, the X-position of the label may no longer be correct.
-      // A “detail” label like this should be placed against the right edge of the screen with a 15-point margin between them. 
-      // That’s done by changing the frame’s origin.x position.
-      addressLabel.frame.origin.x = view.bounds.size.width - addressLabel.frame.size.width - 15
-            
-      // Now that the label's height is set, add a margin (10 points on top and bottom).
-      return addressLabel.frame.size.height + 20
-            
-    //------------------------------------------
-    } else {
-      // All other cells have a standard height.
-      return 44
     }
   }
   //#####################################################################
