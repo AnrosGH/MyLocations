@@ -365,6 +365,11 @@ extension LocationDetailsViewController: UITableViewDelegate {
       
     } else if indexPath.section == 1 && indexPath.row == 0 {
       // The user tapped somewhere in the second section, first row - the row with Add Photo.
+
+      // Deselect the Add Photo row before showing the Action Sheet.
+      // (The cell background quickly fades from gray back to white as the action sheet slides into the screen.)
+      tableView.deselectRowAtIndexPath(indexPath, animated: true)
+      
       pickPhoto()
     }
   }
