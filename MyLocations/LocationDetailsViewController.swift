@@ -63,11 +63,20 @@ class LocationDetailsViewController: UITableViewController {
         // Make the image view visible.
         imageView.hidden = false
         
-        // By default, an image view will stretch the image to fit the entire content area. 
+        //--------------------
+        // IMAGE FRAME SIZE
+        
+        // By default, an image view will stretch the image to fit the entire content area.
         // To keep the image's aspect ratio intact as it is resized, in the storyboard set the Image View's MODE to Aspect Fit.
         // Properly size the image view within the Add Photo table view cell.
-        imageView.frame = CGRect(x: 10, y: 10, width: 260, height: 260)
+        //imageView.frame = CGRect(x: 10, y: 10, width: 260, height: 260)
         
+        let imageAspectRatio = image.size.width / image.size.height
+        let imageViewFrameHeight = 260 / imageAspectRatio
+        
+        imageView.frame = CGRect(x: 10, y:10, width: 260, height: imageViewFrameHeight)
+        
+        //--------------------
         // Hide the label that prompts the user to add a photo.
         addPhotoLabel.hidden = true
       }
@@ -346,7 +355,11 @@ extension LocationDetailsViewController: UITableViewDelegate {
         
       } else {
         // An image exists, so set the height to 260 points for the image view plus 10 points of margin on the top and bottom.
-        return 280
+        //return 280
+        
+        // The height is dynamically calculated by the Property Observer for instance variable, image, anytime the variable's value is changed.
+        // Add 10 points of margin on the top and bottom.
+        return imageView.frame.height + 20
       }
     //------------------------------------------
     } else if indexPath.section == 2 && indexPath.row == 2 {
