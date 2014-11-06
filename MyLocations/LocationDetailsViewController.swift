@@ -121,10 +121,23 @@ class LocationDetailsViewController: UITableViewController {
       }
     }
   }
+  //------------------------------------------
+  // Managing Notifications from NSNotificationCenter
+  
+  // Create an instance variable to hold a reference to the NSNotificationCenter observer, which is necessary to unregister it later.
+  // (Declaring an implicitly unwrapped optional - which means we are sure it will never have the value nil and, therefore, can be used without first unwrapping it.)
+  var observer: AnyObject!
   
   //#####################################################################
   // MARK: - Initialization
   
+  deinit {
+    // Show proof that the view controller really does get destroyed when the Tag/Edit Location screen is closed.
+    println("*** deinit \(self)")
+    
+    // Unregistered when the Location Detail view controller when the Tag/Edit Location screen closes so that the view controller no longer receives UIApplicationDidEnterBackgroundNotifications.
+    NSNotificationCenter.defaultCenter().removeObserver(observer)
+  }
   //#####################################################################
   // MARK: - Segues
   
@@ -346,22 +359,33 @@ class LocationDetailsViewController: UITableViewController {
   
   func listenForBackgroundNotification() {
     
-    NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationDidEnterBackgroundNotification, object: nil, queue: NSOperationQueue.mainQueue()) {
-      notification in
-        // This Closure is called when UIApplicationDidEnterBackgroundNotification is received.
+    // Hold a reference in instance variable, observer, to the return value of addObserverForName() so that it can be unregistered when the Tag/Edit Location screen closes.
+    // This will prevent NSNotificationCenter from sending notifications to an object (the Tag/Edit Location screen) that no longer exists.
+    
+    observer = NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationDidEnterBackgroundNotification, object: nil, queue: NSOperationQueue.mainQueue()) {
       
-        // Using "trailing" closure syntax - the closure is not a parameter to addObserverForName() but immediately follows the method call.
+      // [weak self] is the "capture list" for the closure. It tells the closure that the variable, self, will still be captured, but as a weak reference, not strong. 
+      // As a result, the closure no longer keeps the view controller alive after the Tag/Edit Location screen closes.
+      // Weak references are allowed to become nil, which means the captured self is now an optional inside the closure.
+      // Therefore, the captured self needs to be unwrappped with "if let" before messages can be sent to captured self, the view controller.
       
-        // The image picker and action sheet are both presented as modal view controllers that lie on top of everything else. 
+      [weak self] notification in
+      // This Closure is called when UIApplicationDidEnterBackgroundNotification is received.
+      
+      // Using "trailing" closure syntax - the closure is not a parameter to addObserverForName() but immediately follows the method call.
+      
+      if let strongSelf = self {
+        // The image picker and action sheet are both presented as modal view controllers that lie on top of everything else.
         // If such a modal view controller is active, UIViewController’s presentedViewController property has a reference to that modal view controller.
-      
-        if self.presentedViewController != nil {
+        
+        if strongSelf.presentedViewController != nil {
           // Close the modal view controller - either the image picker or the action sheet.
-          self.dismissViewControllerAnimated(false, completion: nil)
+          strongSelf.dismissViewControllerAnimated(false, completion: nil)
         }
         //------------------------------------------
         // Hide the keyboard if the text view was active.
-        self.descriptionTextView.resignFirstResponder()
+        strongSelf.descriptionTextView.resignFirstResponder()
+      }
     }
   }
   //#####################################################################
