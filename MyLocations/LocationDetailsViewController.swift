@@ -186,6 +186,7 @@ class LocationDetailsViewController: UITableViewController {
     }
     //------------------------------------------
     dateLabel.text = formatDate(date)
+
     //------------------------------------------
     // Dismiss the keyboard in response to a tap anywhere on the screen.
     
@@ -194,6 +195,11 @@ class LocationDetailsViewController: UITableViewController {
     let gestureRecognizer = UITapGestureRecognizer(target: self, action: Selector("hideKeyboard:"))
     gestureRecognizer.cancelsTouchesInView = false
     tableView.addGestureRecognizer(gestureRecognizer)
+
+    //------------------------------------------
+    // Per Apple's recommendation, in the event the app gets put into the background by the user tapping the home button,
+    // close the image picker or action sheet and dismiss the keyboard.
+    listenForBackgroundNotification()
   }
   //#####################################################################
   // MARK: - Gesture Recognition
@@ -314,6 +320,7 @@ class LocationDetailsViewController: UITableViewController {
     }
   }
   //#####################################################################
+  
   @IBAction func cancel() {
     dismissViewControllerAnimated(true, completion: nil)
   }
@@ -333,6 +340,29 @@ class LocationDetailsViewController: UITableViewController {
 
   func formatDate(date: NSDate) -> String {
     return dateFormatter.stringFromDate(date)
+  }
+  //#####################################################################
+  // MARK: - Notification of App Entering the Background
+  
+  func listenForBackgroundNotification() {
+    
+    NSNotificationCenter.defaultCenter().addObserverForName(UIApplicationDidEnterBackgroundNotification, object: nil, queue: NSOperationQueue.mainQueue()) {
+      notification in
+        // This Closure is called when UIApplicationDidEnterBackgroundNotification is received.
+      
+        // Using "trailing" closure syntax - the closure is not a parameter to addObserverForName() but immediately follows the method call.
+      
+        // The image picker and action sheet are both presented as modal view controllers that lie on top of everything else. 
+        // If such a modal view controller is active, UIViewController’s presentedViewController property has a reference to that modal view controller.
+      
+        if self.presentedViewController != nil {
+          // Close the modal view controller - either the image picker or the action sheet.
+          self.dismissViewControllerAnimated(false, completion: nil)
+        }
+        //------------------------------------------
+        // Hide the keyboard if the text view was active.
+        self.descriptionTextView.resignFirstResponder()
+    }
   }
   //#####################################################################
 }
