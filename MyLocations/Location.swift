@@ -90,4 +90,21 @@ class Location: NSManagedObject, MKAnnotation {
     return currentID
   }
   //#####################################################################
+  
+  func removePhotoFile() {
+    // This code snippet can be used to remove any file or folder from the file system.
+      
+    if hasPhoto {
+      let path = photoPath
+      let fileManager = NSFileManager.defaultManager()
+      
+      if fileManager.fileExistsAtPath(path) {
+        var error: NSError?
+        if !fileManager.removeItemAtPath(path, error: &error) {
+          println("Error removing file: \(error!)")
+        }
+      }
+    }
+  }
+  //#####################################################################
 }

@@ -236,6 +236,9 @@ extension LocationsViewController: UITableViewDataSource {
       // Get the Location object from the selected row.
       let location = fetchedResultsController.objectAtIndexPath(indexPath) as Location
       
+      // Remove the photo file from the file system.
+      location.removePhotoFile()
+      
       // Ask the managed object context to delete the object from the scratch pad.
       // This will trigger the NSFetchedResultsController to send a notification to the delegate (NSFetchedResultsChangeDelete), 
       // which then removes the corresponding row from the table.
