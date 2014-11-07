@@ -57,28 +57,7 @@ class LocationDetailsViewController: UITableViewController {
       
       // Store the photo in the image instace variable for later use.
       if let image = image {
-        // Put the image into the image view.
-        imageView.image = image
-        
-        // Make the image view visible.
-        imageView.hidden = false
-        
-        //--------------------
-        // IMAGE FRAME SIZE
-        
-        // By default, an image view will stretch the image to fit the entire content area.
-        // To keep the image's aspect ratio intact as it is resized, in the storyboard set the Image View's MODE to Aspect Fit.
-        // Properly size the image view within the Add Photo table view cell.
-        //imageView.frame = CGRect(x: 10, y: 10, width: 260, height: 260)
-        
-        let imageAspectRatio = image.size.width / image.size.height
-        let imageViewFrameHeight = 260 / imageAspectRatio
-        
-        imageView.frame = CGRect(x: 10, y:10, width: 260, height: imageViewFrameHeight)
-        
-        //--------------------
-        // Hide the label that prompts the user to add a photo.
-        addPhotoLabel.hidden = true
+        showImage(image)
       }
     }
   }
@@ -181,6 +160,16 @@ class LocationDetailsViewController: UITableViewController {
     if let location = locationToEdit {
       // locationToEdit is NOT nil, therefore, an existing Location object is being edited.
       title = "Edit Location"
+      
+      if location.hasPhoto {
+        // Note that the Location’s image is not assigned to the image instance variable. 
+        // If the user doesn’t change the photo, then it is not necessary to write it out to a file again - overwriting an existing file with the exact same data.
+        // The image instance variable only gets set when the user picks a new photo.
+        
+        if let imageToShow = location.photoImage {
+          showImage(imageToShow)
+        }
+      }
     }
     //------------------------------------------
     descriptionTextView.text = descriptionText
@@ -304,7 +293,7 @@ class LocationDetailsViewController: UITableViewController {
     //--------------------
     // Save the photo in the Tag/Edit Location screen and fill in the Location object’s photoID field.
     
-    if let image = image {
+    if let imageToSave = image {
       // An image exists.
       
       if !location.hasPhoto {
@@ -316,7 +305,7 @@ class LocationDetailsViewController: UITableViewController {
       
       // Convert the UIImage into JPEG format and return an NSData object. 
       // (NSData is an object that represents a blob of binary data; usually the contents of a file.)
-      let data = UIImageJPEGRepresentation(image, 0.5)
+      let data = UIImageJPEGRepresentation(imageToSave, 0.5)
       
       // Save the NSData object to the path given by the photoPath property.
       var error: NSError?
@@ -628,22 +617,31 @@ extension LocationDetailsViewController: UIImagePickerControllerDelegate, UINavi
     presentViewController(imagePicker, animated: true, completion: nil)
   }
   //#####################################################################
-  // THIS CODE WAS MOVED TO A didSet BLOCK FOR VARIABLE, image.
-  /*
+  // THIS CODE IS REPLICATED IN THE didSet BLOCK FOR VARIABLE, image.
   func showImage(image: UIImage) {
     
-    // Put the image into the image view.
-    imageView.image = image
-    
-    // Make the image view visible.
-    imageView.hidden = false
-    
-    // Properly size the image view within the Add Photo table view cell.
-    imageView.frame = CGRect(x: 10, y: 10, width: 260, height: 260)
-    
-    // Hide the label that prompts the user to add a photo.
-    addPhotoLabel.hidden = true
+      // Put the image into the image view.
+      imageView.image = image
+      
+      // Make the image view visible.
+      imageView.hidden = false
+      
+      //--------------------
+      // IMAGE FRAME SIZE
+      
+      // By default, an image view will stretch the image to fit the entire content area.
+      // To keep the image's aspect ratio intact as it is resized, in the storyboard set the Image View's MODE to Aspect Fit.
+      // Properly size the image view within the Add Photo table view cell.
+      //imageView.frame = CGRect(x: 10, y: 10, width: 260, height: 260)
+      
+      let imageAspectRatio = image.size.width / image.size.height
+      let imageViewFrameHeight = 260 / imageAspectRatio
+      
+      imageView.frame = CGRect(x: 10, y:10, width: 260, height: imageViewFrameHeight)
+      
+      //--------------------
+      // Hide the label that prompts the user to add a photo.
+      addPhotoLabel.hidden = true
   }
-  */
   //#####################################################################
 }
