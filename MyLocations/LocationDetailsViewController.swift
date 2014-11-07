@@ -289,8 +289,10 @@ class LocationDetailsViewController: UITableViewController {
       // Create a new Core Data managed object called "location" by asking the NSEntityDescription class
       // to insert a new object for entity Location into the managed object context.
       location = NSEntityDescription.insertNewObjectForEntityForName("Location", inManagedObjectContext: managedObjectContext) as Location
+      
+      location.photoID = nil
     }
-    
+    //--------------------
     // Set the properties of the Location object.
     location.locationDescription = descriptionText
     location.category = categoryName
@@ -299,6 +301,30 @@ class LocationDetailsViewController: UITableViewController {
     location.date = date
     location.placemark = placemark
           
+    //--------------------
+    // Save the photo in the Tag/Edit Location screen and fill in the Location object’s photoID field.
+    
+    if let image = image {
+      // An image exists.
+      
+      if !location.hasPhoto {
+        // No photo ID exists for this Location object.  (Otherwise, keep the same ID and overwrite the existing JPEG file.)
+        
+        // Get a new photo ID and assign it to the Location’s photoID property.
+        location.photoID = Location.nextPhotoID()
+      }
+      
+      // Convert the UIImage into JPEG format and return an NSData object. 
+      // (NSData is an object that represents a blob of binary data; usually the contents of a file.)
+      let data = UIImageJPEGRepresentation(image, 0.5)
+      
+      // Save the NSData object to the path given by the photoPath property.
+      var error: NSError?
+      if !data.writeToFile(location.photoPath, options: .DataWritingAtomic, error: &error) {
+        println("Error writing file: \(error)")
+      }
+    }
+    //--------------------
     // NSError and &
     // In NSManagedObjectContext method "save", "error" is an "output parameter" or "pass-by-reference" denoted by the "&".
     // The save() method returns a Bool to indicate whether the operation was successful or not. 
@@ -385,6 +411,10 @@ class LocationDetailsViewController: UITableViewController {
         //------------------------------------------
         // Hide the keyboard if the text view was active.
         strongSelf.descriptionTextView.resignFirstResponder()
+        
+        //------------------------------------------
+        // Testing to see what happens if no call to removeObserver() is made in method deinit.
+        //println(self)
       }
     }
   }
