@@ -304,19 +304,54 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
   //#####################################################################
   
   func stringFromPlacemark(placemark: CLPlacemark) -> String {
-      // Format a CLPlacemark object into a string.
+    // Format a CLPlacemark object into a string.
       
-      // subThoroughfare    = house number
-      // thoroughfare       = street name
-      // locality           = city
-      // administrativeArea = state or province
-      // postalCode         = zip code or postal code
+    // subThoroughfare    = house number
+    // thoroughfare       = street name
+    // locality           = city
+    // administrativeArea = state or province
+    // postalCode         = zip code or postal code
       
-      // "\n" = line break
+    // "\n" = line break
       
-      return "\(placemark.subThoroughfare) \(placemark.thoroughfare)\n" +
-             "\(placemark.locality) \(placemark.administrativeArea) " +
-             "\(placemark.postalCode)"
+    //------------------------------------------
+    var line1 = ""
+    //------------------------------------------
+    line1 = addText(placemark.subThoroughfare, toLine: line1, withSeparator: "")
+    line1 = addText(placemark.thoroughfare,    toLine: line1, withSeparator: " ")
+    //------------------------------------------
+    var line2 = ""
+    //------------------------------------------
+    line2 = addText(placemark.locality,           toLine: line2, withSeparator: "")
+    line2 = addText(placemark.administrativeArea, toLine: line2, withSeparator: " ")
+    line2 = addText(placemark.postalCode,         toLine: line2, withSeparator: " ")
+    //------------------------------------------
+    if line1.isEmpty {
+      // There is no text in the line1 string, so add a newline and a space to the end of line2. 
+      // This forces the UILabel to always draw two lines of text, even if the second one looks empty (it only has a space).
+      return line2 + "\n "
+      
+    } else {
+      return line1 + "\n" + line2
+    }
+  }
+  //#####################################################################
+  
+  func addText(text: String?, toLine line: String, withSeparator separator: String) -> String {
+    // Add text (or nil) to a regular string, with a separator such as a space or comma. 
+    // The separator is only used if line isn’t empty.
+      
+    var result = line
+      
+    if let text = text {
+      // text is NOT nil.
+        
+      if !line.isEmpty {
+        result += separator
+      }
+      result += text
+    }
+    return result
   }
   //#####################################################################
   // MARK: - Location Manager Delegate Protocol
