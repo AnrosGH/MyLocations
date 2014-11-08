@@ -51,7 +51,7 @@ class LocationCell: UITableViewCell {
     
     if location.hasPhoto {
       if let image = location.photoImage {
-        return image.resizedImageWithBounds(CGSize(width: 52, height: 52))
+        return image.resizedImageToFitWithBounds(CGSize(width: 52, height: 52))
       }
     }
     // No image exists.  Return an empty placeholder image.
