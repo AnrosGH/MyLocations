@@ -609,27 +609,45 @@ extension LocationDetailsViewController: UIImagePickerControllerDelegate, UINavi
   //#####################################################################
   
   func takePhotoWithCamera() {
-    let imagePicker = UIImagePickerController()
+    
+    //let imagePicker = UIImagePickerController()
+    let imagePicker = MyImagePickerController()
     
     imagePicker.sourceType = .Camera
     
     imagePicker.delegate = self
     imagePicker.allowsEditing = true
+
+    //------------------------------------------
+    // Make the photo picker's tint color (background color) the same as the view's.
+    // This avoids having standard blue text on a dark gray navigation bar (assuming the view's tint color is set appropriately in the storyboard).
+    imagePicker.view.tintColor = view.tintColor
+    
+    //------------------------------------------
     presentViewController(imagePicker, animated: true, completion: nil)
   }
   //#####################################################################
   
   func choosePhotoFromLibrary() {
-    let imagePicker = UIImagePickerController()
+    
+    //let imagePicker = UIImagePickerController()
+    let imagePicker = MyImagePickerController()
     
     imagePicker.sourceType = .PhotoLibrary
     
     imagePicker.delegate = self
     imagePicker.allowsEditing = true
+    
+    //------------------------------------------
+    // Make the photo picker's tint color (background color) the same as the view's.
+    // This avoids having standard blue text on a dark gray navigation bar (assuming the view's tint color is set appropriately in the storyboard).
+    imagePicker.view.tintColor = view.tintColor
+    
+    //------------------------------------------
     presentViewController(imagePicker, animated: true, completion: nil)
   }
   //#####################################################################
-  // THIS CODE IS REPLICATED IN THE didSet BLOCK FOR VARIABLE, image.
+
   func showImage(image: UIImage) {
     
       // Put the image into the image view.
