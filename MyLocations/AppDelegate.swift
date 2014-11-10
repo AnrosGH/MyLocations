@@ -38,6 +38,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Override point for customization after application launch.
     
     //------------------------------------------
+    customizeAppearance()
+    
+    //------------------------------------------
     // Send the managedObjectContext to the CurrentLocationViewController.
     
     // First, find the UITabBarController.
@@ -191,7 +194,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     })
   }
   //#####################################################################
-  // 5
+  
   func viewControllerForShowingAlert() -> UIViewController {
     // Find the view controller that is currently visible.
               
@@ -202,6 +205,24 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     } else {
       return rootViewController
     }
+  }
+  //#####################################################################
+  // MARK: - App Appearance
+  
+  func customizeAppearance() {
+    
+    // Change the “bar tint” or background color of all navigation bars and tab bars in the app to black.
+    // Note that "bar tint" is not the true background color. The bars are still translucent, which is why they appear as a medium gray rather than pure black.
+    UINavigationBar.appearance().barTintColor = UIColor.blackColor()
+    UITabBar.appearance().barTintColor = UIColor.blackColor()
+    
+    // Set the color of the navigation bar’s title label to white.
+    UINavigationBar.appearance().titleTextAttributes = [ NSForegroundColorAttributeName: UIColor.whiteColor() ]
+    
+    // Set the text color of the TabBar to the same color that was set in the storyboard File Inspector for Global Tint.
+    // Global Tint controls the text color of buttons and other interactive elements.
+    let tintColor = UIColor(red: 255/255.0, green: 238/255.0, blue: 136/255.0, alpha: 1.0)
+    UITabBar.appearance().tintColor = tintColor
   }
   //#####################################################################
 }
