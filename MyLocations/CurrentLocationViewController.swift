@@ -317,14 +317,24 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     //------------------------------------------
     var line1 = ""
     //------------------------------------------
-    line1 = addText(placemark.subThoroughfare, toLine: line1, withSeparator: "")
-    line1 = addText(placemark.thoroughfare,    toLine: line1, withSeparator: " ")
+    // CHANGING TO USE METHOD addText FROM String+AA.swift INSTEAD OF WITHIN THIS CLASS.
+    //line1 = addText(placemark.subThoroughfare, toLine: line1, withSeparator: "")
+    //line1 = addText(placemark.thoroughfare,    toLine: line1, withSeparator: " ")
+    
+    line1.addText(placemark.subThoroughfare)                      // Using the default value for the separator.
+    line1.addText(placemark.thoroughfare,    withSeparator: " ")
+    
     //------------------------------------------
     var line2 = ""
     //------------------------------------------
-    line2 = addText(placemark.locality,           toLine: line2, withSeparator: "")
-    line2 = addText(placemark.administrativeArea, toLine: line2, withSeparator: " ")
-    line2 = addText(placemark.postalCode,         toLine: line2, withSeparator: " ")
+    //line2 = addText(placemark.locality,           toLine: line2, withSeparator: "")
+    //line2 = addText(placemark.administrativeArea, toLine: line2, withSeparator: " ")
+    //line2 = addText(placemark.postalCode,         toLine: line2, withSeparator: " ")
+    
+    line2.addText(placemark.locality)
+    line2.addText(placemark.administrativeArea, withSeparator: " ")
+    line2.addText(placemark.postalCode,         withSeparator: " ")
+    
     //------------------------------------------
     if line1.isEmpty {
       // There is no text in the line1 string, so add a newline and a space to the end of line2. 
@@ -336,7 +346,8 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     }
   }
   //#####################################################################
-  
+  // MOVED TO THE STRING EXTENSIONS FILE, String+AA.swift.
+  /*
   func addText(text: String?, toLine line: String, withSeparator separator: String) -> String {
     // Add text (or nil) to a regular string, with a separator such as a space or comma. 
     // The separator is only used if line isn’t empty.
@@ -353,6 +364,7 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     }
     return result
   }
+  */
   //#####################################################################
   // MARK: - Location Manager Delegate Protocol
   

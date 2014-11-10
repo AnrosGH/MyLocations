@@ -33,8 +33,17 @@ class LocationCell: UITableViewCell {
     // ADDRESS
     
     if let placemark = location.placemark {
-      addressLabel.text = "\(placemark.subThoroughfare) \(placemark.thoroughfare)," + "\(placemark.locality)"
-        
+      // addressLabel.text = "\(placemark.subThoroughfare) \(placemark.thoroughfare)," + "\(placemark.locality)"
+      
+      // Take advantage of the custom String extension method, addText, in String+AA.swift.
+      var text = ""
+      
+      text.addText(placemark.subThoroughfare)
+      text.addText(placemark.thoroughfare, withSeparator: " ")
+      text.addText(placemark.locality, withSeparator: ", ")
+      
+      addressLabel.text = text
+      
     } else {
       // Display latitude and longitude if the Location has not been tagged.
       addressLabel.text = String(format: "Lat: %.8f, Long: %.8f", location.latitude, location.longitude)

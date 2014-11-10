@@ -358,11 +358,23 @@ class LocationDetailsViewController: UITableViewController {
   func stringFromPlacemark(placemark: CLPlacemark) -> String {
     // Format the CLPlacemark object into a string.
     //   StreetNumber StreetName, City, State  Zip Code, Country
-    
+    /*
     return "\(placemark.subThoroughfare) \(placemark.thoroughfare), " +
            "\(placemark.locality), " +
            "\(placemark.administrativeArea) \(placemark.postalCode)," +
            "\(placemark.country)"
+    */
+    // Take advantage of the custom String extension method, addText, in String+AA.swift.
+    var line = ""
+    
+    line.addText(placemark.subThoroughfare)
+    line.addText(placemark.thoroughfare, withSeparator: " ")
+    line.addText(placemark.locality, withSeparator: ", ")
+    line.addText(placemark.administrativeArea, withSeparator: ", ")
+    line.addText(placemark.postalCode, withSeparator: " ")
+    line.addText(placemark.country, withSeparator: ", ")
+    
+    return line
   }
   //#####################################################################
 
