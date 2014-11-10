@@ -2,17 +2,13 @@
   "images" : [
     {
       "idiom" : "universal",
-      "scale" : "1x"
-    },
-    {
-      "idiom" : "universal",
       "scale" : "2x",
-      "filename" : "Checkmark@2x.png"
+      "filename" : "Map@2x.png"
     },
     {
       "idiom" : "universal",
       "scale" : "3x",
-      "filename" : "Checkmark@3x.png"
+      "filename" : "Map@3x.png"
     }
   ],
   "info" : {
