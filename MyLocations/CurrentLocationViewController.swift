@@ -9,6 +9,7 @@
 import UIKit
 import CoreLocation
 import CoreData
+import QuartzCore  // Framework that provides Core Animation.
 
 class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate {
 
@@ -150,8 +151,13 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
       showLocationServicesDeniedAlert()
       return
     }
-    //------------------------------------------
-    // 
+    //------------------------------------------------------------------------------------
+    // Logo
+    
+    if logoVisible {
+      hideLogoView()
+    }
+    //------------------------------------------------------------------------------------
     if updatingLocation {
       // The button was pressed while the app is doing location fetching, so stop the fetching.
       stopLocationManager()
@@ -282,11 +288,99 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     if !logoVisible {
       logoVisible = true
     
-      // Hide the container view so the labels are hidden.
+      // Hide the container view so the GPS labels are hidden.
       containerView.hidden = true
 
       view.addSubview(logoButton)
     }
+  }
+  //#####################################################################
+  
+  func hideLogoView() {
+    
+    // Remove the button with the logo.
+    //logoVisible = false
+    
+    // Show the GPS labels.
+    //containerView.hidden = false
+    //logoButton.removeFromSuperview()
+    
+    //------------------------------------------
+    // Animate hiding the logo instead of using the code above.
+    
+    if !logoVisible { return }
+    
+    logoVisible = false
+    
+    // Create three animations that are played simultaneously.
+    
+    //------------------------------------------
+    // ANIMATION 1
+    // Place the containerView (that contains the GPS labels and Tag Location button) outside of the screen (somewhere to the right) and
+    // move it to the center of the screen.
+    
+    containerView.hidden = false
+    
+    containerView.center.x = view.bounds.size.width * 2
+    containerView.center.y = 40 + containerView.bounds.size.height / 2
+    
+    let centerX = CGRectGetMidX(view.bounds)
+    let panelMover = CABasicAnimation(keyPath: "position")
+    
+    panelMover.removedOnCompletion = false
+    panelMover.fillMode = kCAFillModeForwards
+    panelMover.duration = 0.6
+    panelMover.fromValue = NSValue(CGPoint: containerView.center)
+    panelMover.toValue = NSValue(CGPoint: CGPoint(x: centerX, y: containerView.center.y))
+    panelMover.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseOut)
+    
+    // Since the panelMover animation takes the longest, set a delegate on it so that this view controller can be notified when the entire animation has been completed.
+    // (The methods for this delegate are not declared in a protocol, so there is no need to add anything to your class line. 
+    //  This is also known as an informal protocol. It’s a holdover from the early days of Objective-C.)
+    panelMover.delegate = self
+    
+    containerView.layer.addAnimation(panelMover, forKey: "panelMover")
+    
+    //------------------------------------------
+    // ANIMATION 2
+    // Slide the logo image view off of the screen.
+    
+    let logoMover = CABasicAnimation(keyPath: "position")
+    
+    logoMover.removedOnCompletion = false
+    logoMover.fillMode = kCAFillModeForwards
+    logoMover.duration = 0.5
+    logoMover.fromValue = NSValue(CGPoint: logoButton.center)
+    logoMover.toValue = NSValue(CGPoint: CGPoint(x: -centerX, y: logoButton.center.y))
+    logoMover.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+    logoButton.layer.addAnimation(logoMover, forKey: "logoMover")
+    
+    //------------------------------------------
+    // ANIMATION 3
+    // Rotate the image view around its center giving the impression that it is rolling away.
+    
+    let logoRotator = CABasicAnimation(keyPath: "transform.rotation.z")
+    
+    logoRotator.removedOnCompletion = false
+    logoRotator.fillMode = kCAFillModeForwards
+    logoRotator.duration = 0.5
+    logoRotator.fromValue = 0.0
+    logoRotator.toValue = -2 * M_PI
+    logoRotator.timingFunction = CAMediaTimingFunction(name: kCAMediaTimingFunctionEaseIn)
+    logoButton.layer.addAnimation(logoRotator, forKey: "logoRotator")
+  }
+  //#####################################################################
+  // MARK: - Informal Protocol for Animation
+  
+  override func animationDidStop(anim: CAAnimation!, finished flag: Bool) {
+
+    // Clean up after the animations and remove the logo button.
+    
+    containerView.layer.removeAllAnimations()
+    containerView.center.x = view.bounds.size.width / 2
+    containerView.center.y = 40 + containerView.bounds.size.height / 2
+    logoButton.layer.removeAllAnimations()
+    logoButton.removeFromSuperview()
   }
   //#####################################################################
   // MARK: - Location Services
