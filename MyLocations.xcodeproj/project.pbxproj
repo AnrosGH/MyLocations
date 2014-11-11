@@ -28,6 +28,7 @@
 		64CCD7861A0171A40079CD4E /* Location.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CCD7851A0171A40079CD4E /* Location.swift */; };
 		64CCD78A1A02D3660079CD4E /* LocationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CCD7891A02D3660079CD4E /* LocationsViewController.swift */; };
 		64CCD78C1A02E1120079CD4E /* LocationCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 64CCD78B1A02E1120079CD4E /* LocationCell.swift */; };
+		64E6D0621A12A1F5001A2725 /* Sound.caf in Resources */ = {isa = PBXBuildFile; fileRef = 64E6D0611A12A1F5001A2725 /* Sound.caf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -66,6 +67,7 @@
 		64CCD7851A0171A40079CD4E /* Location.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Location.swift; sourceTree = "<group>"; };
 		64CCD7891A02D3660079CD4E /* LocationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationsViewController.swift; sourceTree = "<group>"; };
 		64CCD78B1A02E1120079CD4E /* LocationCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LocationCell.swift; sourceTree = "<group>"; };
+		64E6D0611A12A1F5001A2725 /* Sound.caf */ = {isa = PBXFileReference; lastKnownFileType = file; path = Sound.caf; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -128,6 +130,7 @@
 				64105EFD1A115F350085BCEE /* MyImagePickerController.swift */,
 				64C1B75319F5816B00E334F0 /* Images.xcassets */,
 				64C1B75519F5816B00E334F0 /* LaunchScreen.xib */,
+				64E6D0601A12A1F4001A2725 /* Sound */,
 				64C1B74819F5816B00E334F0 /* Supporting Files */,
 			);
 			path = MyLocations;
@@ -156,6 +159,15 @@
 				64C1B76119F5816C00E334F0 /* Info.plist */,
 			);
 			name = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		64E6D0601A12A1F4001A2725 /* Sound */ = {
+			isa = PBXGroup;
+			children = (
+				64E6D0611A12A1F5001A2725 /* Sound.caf */,
+			);
+			name = Sound;
+			path = ../Sound;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -240,6 +252,7 @@
 			files = (
 				64C1B75219F5816B00E334F0 /* Main.storyboard in Resources */,
 				64C1B75719F5816B00E334F0 /* LaunchScreen.xib in Resources */,
+				64E6D0621A12A1F5001A2725 /* Sound.caf in Resources */,
 				64C1B75419F5816B00E334F0 /* Images.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

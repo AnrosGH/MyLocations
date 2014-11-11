@@ -9,7 +9,8 @@
 import UIKit
 import CoreLocation
 import CoreData
-import QuartzCore  // Framework that provides Core Animation.
+import QuartzCore    // Framework that provides Core Animation.
+import AudioToolbox  // System Sounds
 
 class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate {
 
@@ -48,6 +49,13 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
   //------------------------------------------
   // Timeout
   var timer: NSTimer?
+  //------------------------------------------
+  // Sound
+  
+  // Because assigning a variable to just "0" would result in a variable of type Int, the type is explicitly listed as SystemSoundID. 
+  // This is a numeric identifier – sometimes called a “handle” – that refers to a system sound object. 
+  // 0 means no sound has been loaded yet.
+  var soundID: SystemSoundID = 0
   //------------------------------------------
   // Permanent Data Storage
   
@@ -123,9 +131,12 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
   // viewDidLoad() is called after prepareForSegue().
   
   override func viewDidLoad() {
+
     super.viewDidLoad()
+
     updateLabels()
     configureGetButton()
+    loadSoundEffect("Sound.caf")
   }
   //#####################################################################
   // MARK: - Action Methods
@@ -413,6 +424,43 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
     logoButton.removeFromSuperview()
   }
   //#####################################################################
+  // MARK: - Sound
+  
+  func loadSoundEffect(name: String) {
+      
+    if let path = NSBundle.mainBundle().pathForResource(name, ofType: nil) {
+      // Load the sound file.
+
+      let fileURL = NSURL.fileURLWithPath(path, isDirectory: false)
+      
+      if fileURL == nil {
+        println("NSURL is nil for path: \(path)")
+        return
+      }
+      
+      //------------------------------------------
+      // Put the sound file into a new sound object.
+      
+      let error = AudioServicesCreateSystemSoundID(fileURL, &soundID)
+      
+      if Int(error) != kAudioServicesNoError {
+        println("Error code \(error) loading sound at path: \(path)")
+        return
+      }
+    }
+  }
+  //#####################################################################
+
+  func unloadSoundEffect() {
+    AudioServicesDisposeSystemSoundID(soundID)
+    soundID = 0
+  }
+  //#####################################################################
+
+  func playSoundEffect() {
+    AudioServicesPlaySystemSound(soundID)
+  }
+  //#####################################################################
   // MARK: - Location Services
   
   func showLocationServicesDeniedAlert() {
@@ -680,8 +728,16 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
       
           if error == nil && !placemarks.isEmpty {
             // No errors AND objects exist in the placemarks array.
-        
-            // Usually there will be only one CLPlacemark object in the array, but it is possible for one location coordinate to refer to more than one address. 
+          
+            //--------------------
+            // Sound
+          
+            if self.placemark == nil {
+              println("FIRST TIME!")
+              self.playSoundEffect()
+            }
+            //--------------------
+            // Usually there will be only one CLPlacemark object in the array, but it is possible for one location coordinate to refer to more than one address.
             // This app can only handle one address, so just pick the last object in the placemarks array (which usually is the only one).
         
             // The placemarks array contains objects of type AnyObject. This happens because CLGeocoder was written in Objective-C,
