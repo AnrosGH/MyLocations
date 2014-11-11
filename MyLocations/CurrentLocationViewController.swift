@@ -20,6 +20,10 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
   @IBOutlet weak var tagButton: UIButton!
   @IBOutlet weak var getButton: UIButton!
   //------------------------------------------
+  // Text Labels
+  @IBOutlet weak var latitudeTextLabel: UILabel!
+  @IBOutlet weak var longitudeTextLabel: UILabel!
+  //------------------------------------------
   // The CLLocationManager is the object that will provide GPS coordinates. 
   // Using let, not a variable (var). Its value will never have to change once a location manager object has been created.
   let locationManager = CLLocationManager()
@@ -172,7 +176,11 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
       } else {
         addressLabel.text = "No Address Found"
       }
-      //------------------------------------------------------------------------------------
+      //------------------------------------------
+      latitudeTextLabel.hidden = false
+      longitudeTextLabel.hidden = false
+      
+    //------------------------------------------------------------------------------------
     } else {
       // Location does not exist.
       
@@ -212,6 +220,10 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
       }
       
       messageLabel.text = statusMessage
+      
+      //------------------------------------------
+      latitudeTextLabel.hidden = true
+      longitudeTextLabel.hidden = true
     }
   }
   //#####################################################################
