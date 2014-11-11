@@ -49,6 +49,22 @@ class CategoryPickerViewController: UITableViewController {
     }
   }
   //#####################################################################
+  // MARK: - UIViewController - Managing the View
+  
+  // viewDidLoad() is called after prepareForSegue().
+  
+  override func viewDidLoad() {
+    
+    super.viewDidLoad()
+    
+    //------------------------------------------
+    // Make the table view black (although this does not alter the cells themselves).
+    
+    tableView.backgroundColor = UIColor.blackColor()
+    tableView.separatorColor = UIColor(white: 1.0, alpha: 0.2)
+    tableView.indicatorStyle = .White
+  }
+  //#####################################################################
 }
 //#####################################################################
 // MARK: - Table View Data Source
@@ -116,6 +132,21 @@ extension CategoryPickerViewController: UITableViewDelegate {
       // Update the variable that tracks the currently selected category.
       selectedIndexPath = indexPath
     }
+  }
+  //#####################################################################
+  
+  override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+    // This method is called just before a cell becomes visible.
+    
+    // Set the background and text colors of the cells.
+    
+    cell.backgroundColor = UIColor.blackColor()
+    cell.textLabel.textColor = UIColor.whiteColor()
+    cell.textLabel.highlightedTextColor = cell.textLabel.textColor
+    
+    let selectionView = UIView(frame: CGRect.zeroRect)
+    selectionView.backgroundColor = UIColor(white: 1.0, alpha: 0.2)
+    cell.selectedBackgroundView = selectionView
   }
   //#####################################################################
 }

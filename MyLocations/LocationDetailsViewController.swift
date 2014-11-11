@@ -202,6 +202,18 @@ class LocationDetailsViewController: UITableViewController {
     // Per Apple's recommendation, in the event the app gets put into the background by the user tapping the home button,
     // close the image picker or action sheet and dismiss the keyboard.
     listenForBackgroundNotification()
+
+    //------------------------------------------
+    // Make the table view black (although this does not alter the cells themselves).
+    tableView.backgroundColor = UIColor.blackColor()
+    tableView.separatorColor = UIColor(white: 1.0, alpha: 0.2)
+    tableView.indicatorStyle = .White
+
+    descriptionTextView.textColor = UIColor.whiteColor()
+    descriptionTextView.backgroundColor = UIColor.blackColor()
+
+    addPhotoLabel.textColor = UIColor.whiteColor()
+    addPhotoLabel.highlightedTextColor = addPhotoLabel.textColor
   }
   //#####################################################################
   // MARK: - Gesture Recognition
@@ -506,6 +518,36 @@ extension LocationDetailsViewController: UITableViewDelegate {
       tableView.deselectRowAtIndexPath(indexPath, animated: true)
       
       pickPhoto()
+    }
+  }
+  //#####################################################################
+  
+  // This table view controller has static cells so there is no cellForRowAtIndexPath data source method that can be used to change the colors of the cells and their labels.
+  
+  override func tableView(tableView: UITableView, willDisplayCell cell: UITableViewCell, forRowAtIndexPath indexPath: NSIndexPath) {
+    // This method is called just before a cell becomes visible.
+    
+    cell.backgroundColor = UIColor.blackColor()
+    cell.textLabel.textColor = UIColor.whiteColor()
+    cell.textLabel.highlightedTextColor = cell.textLabel.textColor
+    
+    // Using "if let" to unwrap cell.detailTextLabel because not all cells will have a detail label and this property may be nil.
+    if let detailLabel = cell.detailTextLabel {
+      detailLabel.textColor = UIColor(white: 1.0, alpha: 0.4)
+      detailLabel.highlightedTextColor = detailLabel.textColor
+    }
+    
+    let selectionView = UIView(frame: CGRect.zeroRect)
+    selectionView.backgroundColor = UIColor(white: 1.0, alpha: 0.2)
+    cell.selectedBackgroundView = selectionView
+    
+    //------------------------------------------
+    // The Address cell does not use one of the built-in cell types so it does not have anything connected to the textLabel and detailTextLabel properties.
+    // Manually set the attributes of the Address label.
+    if indexPath.row == 2 {
+      let addressLabel = cell.viewWithTag(100) as UILabel
+      addressLabel.textColor = UIColor.whiteColor()
+      addressLabel.highlightedTextColor = addressLabel.textColor
     }
   }
   //#####################################################################

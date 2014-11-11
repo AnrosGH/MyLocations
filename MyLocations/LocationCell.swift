@@ -92,8 +92,8 @@ class LocationCell: UITableViewCell {
     
     //------------------------------------------
     // For testing to make sure the labels take advantage of all the available screen space on the larger iPhones.
-    descriptionLabel.backgroundColor = UIColor.blueColor()
-    addressLabel.backgroundColor = UIColor.redColor()
+    //descriptionLabel.backgroundColor = UIColor.blueColor()
+    //addressLabel.backgroundColor = UIColor.redColor()
   }
   //#####################################################################
   // MARK: - Cell Layout
