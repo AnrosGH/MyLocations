@@ -89,6 +89,32 @@ class LocationCell: UITableViewCell {
     
     // Move the separator lines between the cells a bit to the right so there are no lines between the thumbnail images.
     separatorInset = UIEdgeInsets(top: 0, left: 82, bottom: 0, right: 0)
+    
+    //------------------------------------------
+    // For testing to make sure the labels take advantage of all the available screen space on the larger iPhones.
+    descriptionLabel.backgroundColor = UIColor.blueColor()
+    addressLabel.backgroundColor = UIColor.redColor()
+  }
+  //#####################################################################
+  // MARK: - Cell Layout
+  
+  // Setting autosizing on the labels so they automatically resize, is unfortunately broken in iOS 8.1. 
+  // Autosizing works fine outside of table view cells but inside a table view it makes the labels way too large.
+  
+  override func layoutSubviews() {
+    // UIKit calls layoutSubviews() just before it makes the cell visible.
+    
+    super.layoutSubviews()
+    
+    // The superview property refers to the table view cell’s Content View. 
+    // Labels are never added directly to the cell but to its Content View. 
+    // Note that superview is an optional – a cell that is not yet part of a table view doesn’t have a superview yet – hence the use of "if let" to unwrap it.
+    
+    if let sv = superview {
+      // Resize the frames of the labels to take up all the remaining space in the cell, with 10 points margin on the right.
+      descriptionLabel.frame.size.width = sv.frame.size.width - descriptionLabel.frame.origin.x - 10
+      addressLabel.frame.size.width = sv.frame.size.width - addressLabel.frame.origin.x - 10
+    }
   }
   //#####################################################################
   // MARK: - Photo Thumbnail
