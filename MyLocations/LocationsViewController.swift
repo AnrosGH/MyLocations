@@ -155,6 +155,11 @@ class LocationsViewController: UITableViewController {
     // In addition to swipe-to-delete enabled by implementing UITableView Data Source Protocol method, tableview:commitEditingStyle:forRowAtIndexPath,
     // Add an Edit button in the in the navigation bar that triggers an altermate mode for deleting (and sometimes moving) rows.
     navigationItem.rightBarButtonItem = editButtonItem()
+    //------------------------------------------
+    // Make the table view black (although this does not alter the cells themselves).
+    tableView.backgroundColor = UIColor.blackColor()
+    tableView.separatorColor = UIColor(white: 1.0, alpha: 0.2)
+    tableView.indicatorStyle = .White
   }
   //#####################################################################
   // MARK: - Core Data
@@ -267,7 +272,58 @@ extension LocationsViewController: UITableViewDataSource {
   override func tableView(tableView: UITableView, titleForHeaderInSection section: Int) -> String? {
     
     let sectionInfo = fetchedResultsController.sections![section] as NSFetchedResultsSectionInfo
-    return sectionInfo.name
+    
+    // Make the section headers uppercase.
+    return sectionInfo.name!.uppercaseString
+  }
+  //#####################################################################
+}
+//#####################################################################
+// MARK: - Table View Delegate
+
+extension LocationsViewController: UITableViewDelegate {
+  
+  override func tableView(tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    // This method gets called once for each section in the table view.
+    
+    //------------------------------------------
+    // Create a label for the section name.
+    
+    let labelRect = CGRect(x: 15, y: tableView.sectionHeaderHeight - 14, width: 300, height: 14)
+    let label = UILabel(frame: labelRect)
+    
+    label.font = UIFont.boldSystemFontOfSize(11)
+    
+    // The dataSource property is an optional so ! is being used to force an unwrap.
+    // Also, method tableView(titleForHeaderInSection) is being called on the table view’s data source, which is of course the LocationsViewController itself.
+    // But this method is an optional method – not all data sources need to implement it. 
+    // Because of that, the method needs to be unwrapped with an exclamation mark in order to use it. (Unwrap a method.)
+    // This could also be written as:
+    //    label.text = self.tableView(tableView, titleForHeaderInSection: section)
+    
+    label.text = tableView.dataSource!.tableView!(tableView, titleForHeaderInSection: section)
+    label.textColor = UIColor(white: 1.0, alpha: 0.4)
+    label.backgroundColor = UIColor.clearColor()
+    
+    //------------------------------------------
+    // Create a 1-pixel high view that functions as a separator line.
+    
+    let separatorRect = CGRect(x: 15, y: tableView.sectionHeaderHeight - 0.5, width: tableView.bounds.size.width - 15, height: 0.5)
+    let separator = UIView(frame: separatorRect)
+    separator.backgroundColor = tableView.separatorColor
+    
+    //------------------------------------------
+    // Create a container view to hold the two subviews.
+    
+    let viewRect = CGRect(x: 0, y: 0, width: tableView.bounds.size.width, height: tableView.sectionHeaderHeight)
+    let view = UIView(frame: viewRect)
+    view.backgroundColor = UIColor(white: 0, alpha: 0.85)
+    
+    view.addSubview(label)
+    view.addSubview(separator)
+    
+    //------------------------------------------
+    return view
   }
   //#####################################################################
 }
