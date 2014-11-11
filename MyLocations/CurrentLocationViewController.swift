@@ -272,12 +272,42 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
   //#####################################################################
   
   func configureGetButton() {
-          
+    
+    let spinnerTag = 1000
+
     if updatingLocation {
+      
       getButton.setTitle("Stop", forState: .Normal)
-          
+      
+      //--------------------
+      // ACTIVITY INDICATOR
+      
+      if view.viewWithTag(spinnerTag) == nil {
+        
+        // Create a new UIActivityIndicatorView instance.
+        let spinner = UIActivityIndicatorView(activityIndicatorStyle: .White)
+        
+        // Position the spinner view below the message label at the top of the screen.
+        spinner.center = messageLabel.center
+        spinner.center.y += spinner.bounds.size.height/2 + 15
+        spinner.startAnimating()
+        spinner.tag = spinnerTag
+        
+        // Make the spinner visible on the screen.
+        containerView.addSubview(spinner)
+      }
+    //------------------------------------------
     } else {
+      
       getButton.setTitle("Get My Location", forState: .Normal)
+      
+      //--------------------
+      // ACTIVITY INDICATOR
+
+      if let spinner = view.viewWithTag(spinnerTag) {
+        // Revert the button to its old state by removing the activity indicator view from the screen.
+        spinner.removeFromSuperview()
+      }
     }
   }
   //#####################################################################
