@@ -24,6 +24,9 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
   @IBOutlet weak var latitudeTextLabel: UILabel!
   @IBOutlet weak var longitudeTextLabel: UILabel!
   //------------------------------------------
+  // Container for Lat/Long Labels and Tag Location Button
+  @IBOutlet weak var containerView: UIView!
+  //------------------------------------------
   // The CLLocationManager is the object that will provide GPS coordinates. 
   // Using let, not a variable (var). Its value will never have to change once a location manager object has been created.
   let locationManager = CLLocationManager()
@@ -54,6 +57,31 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
   // Therefore, the managedObjectContext variable must be left nil for a short while until the segue happens, which means it must be an optional.
   var managedObjectContext: NSManagedObjectContext!
   
+  //------------------------------------------
+  // Logo
+  
+  // The logo image is actually a button, so that it can be tapped to get started. 
+  // The app will show this button when it starts up and when it doesn’t have anything better to display (for example, after pressing Stop and there are no coordinates and no error).
+  // The boolean variable, logoVisible, will be used to orchestrate this.
+  var logoVisible = false
+  
+  lazy var logoButton: UIButton = {
+    
+    // Using a "custom" type UIButton, meaning that it has no title text or other frills.
+    let button = UIButton.buttonWithType(.Custom) as UIButton
+    
+    // Set the button's background image to Logo.png.
+    button.setBackgroundImage(UIImage(named: "Logo"), forState: .Normal)
+    button.sizeToFit()
+    
+    // Call method, getLocation(), when tapped.
+    button.addTarget(self, action: Selector("getLocation"), forControlEvents: .TouchUpInside)
+    
+    button.center.x = CGRectGetMidX(self.view.bounds)
+    button.center.y = 220
+    
+    return button
+  }()
   //#####################################################################
   // MARK: - Initialization
   
@@ -196,27 +224,36 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
       var statusMessage: String
       
       if let error = lastLocationError {
+        
         if error.domain == kCLErrorDomain && error.code == CLError.Denied.rawValue {
         //if error.domain == kCLErrorDomain && error.code == CLError.Denied.toRaw() {
         // The user has not given the app permission to use location services.
         statusMessage = "Location Services Disabled"
+          
         //--------------------
-      } else {
+        } else {
         // Probably was not able to get a location fix.
         statusMessage = "Error Getting Location"
         }
-        //--------------------
+        
+      //--------------------
       } else if !CLLocationManager.locationServicesEnabled() {
         // Even if there was no error, it might still be impossible to get location coordinates if the user disabled Location Services
         // completely on the device (instead of just for this app).
         statusMessage = "Location Services Disabled"
-        //--------------------
+        
+      //--------------------
       } else if updatingLocation {
         // Everything is fine, but the first location object has not yet been received.
         statusMessage = "Searching..."
-        //--------------------
+        
+      //--------------------
       } else {
-        statusMessage = "Tap 'Get My Location' to Start"
+        //statusMessage = "Tap 'Get My Location' to Start"
+
+        // Display the logo instead of a status message.
+        statusMessage = ""
+        showLogoView()
       }
       
       messageLabel.text = statusMessage
@@ -235,6 +272,20 @@ class CurrentLocationViewController: UIViewController, CLLocationManagerDelegate
           
     } else {
       getButton.setTitle("Get My Location", forState: .Normal)
+    }
+  }
+  //#####################################################################
+  // MARK: - Logo View
+  
+  func showLogoView() {
+      
+    if !logoVisible {
+      logoVisible = true
+    
+      // Hide the container view so the labels are hidden.
+      containerView.hidden = true
+
+      view.addSubview(logoButton)
     }
   }
   //#####################################################################
